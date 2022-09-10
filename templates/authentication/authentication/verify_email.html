@@ -1,0 +1,10 @@
+{% autoescape off %}
+
+Добрий день, {{ user.get_username }}, 
+
+Будь ласка, перейдіть по посилання, щоб закінити реєстрацію!
+
+{{ protocol }}://{{ domain }}{% url 'authentication:verify_email' uidb64=uid token=token %}
+
+
+{% endautoescape %}

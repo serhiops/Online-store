@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% block loadCSS %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/contact.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/contact_responsive.css'%}">
+{% endblock loadCSS %}
+
+<div class="home">
+    <div class="home_container">
+        <div class="home_background" style="background-image:url({% static 'images/contact.jpg'%})"></div>
+        <div class="home_content_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="home_content">
+                            <div class="breadcrumbs">
+                                <ul>
+                                    <li><a href="index.html">Home</a></li>
+                                    <li>Contact</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact -->
+
+<div class="contact">
+    <div class="container">
+        <div class="row">
+
+            <!-- Get in touch -->
+            <div class="col-lg-8 contact_col">
+                <div class="get_in_touch">
+                    <div class="section_title">Перейдіть, будь ласка, до своєї електронної пошти.</div>
+                </div>
+            </div>
+
+{% endblock content %}
+
+{% block loadJS %}
+<script src="{% static 'js/contact.js'%}"></script>
+{% endblock loadJS %}

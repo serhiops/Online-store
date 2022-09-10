@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block loadCSS %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'styles/categories.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/categories_responsive.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/product.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/product_responsive.css'%}">
+
+{% endblock loadCSS %}
+
+{% block content %}
+
+<div class="home">
+    <div class="home_container">
+        <div class="home_background" style="background-image:url({{ currentCategory.image.url }})"></div>
+        <div class="home_content_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="home_content">
+                            <div class="home_title">{{ currentCategory.name }}<span>.</span></div>
+                            <div class="home_text"><p>{{ currentCategory.description }}</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block productContent %}
+
+{% endblock productContent %}
+
+{% endblock content %}
+
+{% block loadJS %}
+
+<script src="{% static 'js/categories.js' %}"></script>
+<script src="{% static 'js/product.js'%}"></script>
+
+{% endblock loadJS %}

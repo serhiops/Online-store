@@ -1,0 +1,29 @@
+{% extends 'authentication/base_authentication.html' %}
+{% load socialaccount %}
+
+{% block authenticationForm %}
+                        
+<form method="post" id="contact_form" class="contact_form">
+    {{ form.none_field.errors }}
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-xl-6">
+            
+            <label for="{{ form.username.id_for_label }}">Login</label>
+            {{ form.username }}
+            <div class="invalid-feedback">
+                {{ form.username.errors }}
+            </div>
+        </div>
+        <div class="col-xl-6 last_name_col">
+            <label for="{{ form.password.id_for_label }}">Password</label>
+            {{ form.password }}
+            <div class="invalid-feedback">
+                {{ form.password.errors }}
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="button contact_button"><span>Send Message</span></button>
+</form>
+<a href="{% provider_login_url 'google' %}">Ввійти з допомогою Google</a>
+{% endblock authenticationForm %}             

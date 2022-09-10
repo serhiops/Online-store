@@ -1,0 +1,54 @@
+{% extends 'authentication/base_authentication.html' %}
+{% load socialaccount %}
+
+{% block authenticationForm %}
+                        
+<form method="post" id="contact_form" class="contact_form">
+    {{ form.none_field.errors }}
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-xl-6"> 
+            <label for="{{ form.username.id_for_label }}">Login</label>
+            {{ form.username }}
+            <div class="invalid-feedback">
+                {{ form.username.errors }}
+            </div>
+        </div>
+
+        <div class="col-xl-6"> 
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+        <div class="invalid-feedback">
+            {{ form.email.errors }}
+        </div>
+    </div>
+
+    <div class="col-xl-6 last_name_col">
+        <label for="{{ form.password1.id_for_label }}">Password</label>
+        {{ form.password1 }}
+        <div class="invalid-feedback">
+            {{ form.password1.errors }}
+        </div>
+    </div>
+
+    <div class="col-xl-6 last_name_col">
+        <label for="{{ form.password2.id_for_label }}">Repeat your password</label>
+        {{ form.password2 }}
+        <div class="invalid-feedback">
+            {{ form.password2.errors }}
+        </div>
+    </div>
+
+    <div class="col-xl-6 last_name_col">
+        <label for="{{ form.number_of_phone.id_for_label }}">Number of phone</label>
+        {{ form.number_of_phone }}
+        <div class="invalid-feedback">
+            {{ form.number_of_phone.errors }}
+        </div>
+    </div>
+
+</div>
+<button type="submit" class="button contact_button"><span>Send Message</span></button>
+</form>
+    <a href="{% provider_login_url 'google' %}">Зареєструватися з допомогою Google</a>
+{% endblock authenticationForm %}
