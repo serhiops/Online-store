@@ -33,12 +33,12 @@
                                 </div>
                                 {% endfor %}
                             {% endif %}
-                                <!--
+                               <!--
 							<div class="details_image_thumbnail active" data-image="images/details_1.jpg"><img src="images/details_1.jpg" alt=""></div>
 							<div class="details_image_thumbnail" data-image="images/details_2.jpg"><img src="images/details_2.jpg" alt=""></div>
 							<div class="details_image_thumbnail" data-image="images/details_3.jpg"><img src="images/details_3.jpg" alt=""></div>
 							<div class="details_image_thumbnail" data-image="images/details_4.jpg"><img src="images/details_4.jpg" alt=""></div>
-                                -->
+                                --> 
                         </div>
 					</div>
 				</div>
@@ -59,22 +59,25 @@
 							<span>In Stock</span>
 						</div>
 						<div class="details_text">
-							<p>{{ product.description|truncatechars:360 }}</p>
+							<p>{{ product.description|truncatechars:360 }}</p> 
 						</div>
 
 						<!-- Product Quantity -->
+						<form method='post'>
+						{{ form.none_field.errors }}
+    					{% csrf_token %}
 						<div class="product_quantity_container">
 							<div class="product_quantity clearfix">
-								<span>Qty</span>
-								<input id="quantity_input" type="text" pattern="[0-9]*" value="1">
+								<label for="{{ form.qty.id_for_label }}"><span>Qty</span></label>
+								{{ form.qty }}
 								<div class="quantity_buttons">
 									<div id="quantity_inc_button" class="quantity_inc quantity_control"><i class="fa fa-chevron-up" aria-hidden="true"></i></div>
 									<div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
 								</div>
 							</div>
-							<div class="button cart_button"><a href="#">Add to cart</a></div>
+							<button type="submit" style="margin-left : 5%" class="btn btn-outline-dark btn-lg">Add to Cart</button>
 						</div>
-
+					</form>
 						<!-- Share -->
 						<div class="details_share">
 							<span>Share:</span>
@@ -93,7 +96,7 @@
 				<div class="col">
 					<div class="description_title_container">
 						<div class="description_title">Description</div>
-						<div class="reviews_title"><a href="#">Reviews <span>(1)</span></a></div>
+						<div class="reviews_title"><a href="#">Reviews <span>{{ product.views.count }}</span></a></div>
 					</div>
 					<div class="description_text">
 						<p>{{ product.description }}</p>

@@ -64,6 +64,7 @@ class Product(models.Model):
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="get_product", verbose_name="product")
     added = models.DateTimeField(auto_now_add=True, verbose_name="added")
+    qty = models.PositiveIntegerField(default=1, verbose_name="qty")
     user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, related_name="get_fp")
     class Meta:
         ordering = ("-added",)
