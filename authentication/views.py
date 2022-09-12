@@ -56,7 +56,7 @@ class Login(LoginView):
         return super().form_valid(form)
     
     def form_invalid(self, form : AuthenticationForm) -> HttpResponse:
-        messages.error(self.request, getErrorMessageString(form) )
+        messages.error(self.request, form.errors.as_text() )
         return super().form_invalid(form)
     
 

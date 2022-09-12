@@ -1,0 +1,33 @@
+{% load persent %}
+{% load humanize %}
+
+<form method="post">
+    {{ formSet.management_form }}
+    {% csrf_token %}
+
+    {% for form, CartObject in products %}
+    <div class="cart_item d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+         <div class="cart_item_product d-flex flex-row align-items-center justify-content-start">
+             <div class="cart_item_image">
+                 <div><img src="{{ CartObject.product.photos.first.image.url }}" alt=""></div>
+             </div>
+             <div class="cart_item_name_container">
+                 <div class="cart_item_name"><a href="{{ CartObject.product.get_absolute_url  }}">{{ CartObject.product.name }}</a></div>
+                 <div class="cart_item_edit"><a href="{{ CartObject.product.get_absolute_url  }}">Edit Product</a></div>
+             </div>
+         </div>
+         
+         <div class="cart_item_price">
+            {{ CartObject.product.price.currency }} {{ CartObject.product|getDiscountPrice }}
+         </div>              
+        <div class="cart_item_quantity">
+             <div class="product_quantity_container">
+                 <div class="product_quantity clearfix">
+                    <span>Qty</span>
+                    {{ form }}
+                 </div>
+             </div>
+            </div>
+         <div class="cart_item_total">{{ CartObject.product.price.currency }} {{ CartObject.product|getTotalPrice:form.qty.value }}</div>
+     </div>
+    {% endfor %}

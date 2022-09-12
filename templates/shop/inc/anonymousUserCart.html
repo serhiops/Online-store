@@ -1,0 +1,35 @@
+{% load persent %}
+{% load humanize %}
+
+{% for product, qty in products %}
+
+<div class="cart_item d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+    <!-- Name -->
+    <div class="cart_item_product d-flex flex-row align-items-center justify-content-start">
+        <div class="cart_item_image">
+            <div><img src="{{ product.photos.first.image.url }}" alt=""></div>
+        </div>
+        <div class="cart_item_name_container">
+            <div class="cart_item_name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></div> 
+            <div class="cart_item_edit"><a href="{{ product.get_absolute_url }}">Edit Product</a></div>
+        </div>
+    </div>
+    <!-- Price -->
+    <div class="cart_item_price">
+        {{ product.price.currency }} {{ product|getDiscountPrice }} 
+    </div>
+    <!-- Quantity -->
+    <div class="cart_item_quantity">
+        <div class="product_quantity_container">
+            <div class="product_quantity clearfix">
+                <span>Qty</span>
+                <input id="quantity_input" type="text" pattern="[0-9]*" value="{{qty }}">
+            </div>
+        </div>
+    </div>
+    <!-- Total -->
+    
+        <div class="cart_item_total">{{ product.price.currency }} {{ product|getTotalPrice:qty }}</div><!-- example -->
+
+</div>
+{% endfor %}

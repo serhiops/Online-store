@@ -1,12 +1,21 @@
 from django import template
+from shop.models import Product
 
 register = template.Library()
 
 @register.filter(name='getDiscountPrice')
-def getDiscountPrice(value, arg):
-    return value - (value * arg / 100) if 0 < arg < 100 else value
+def getDiscountPrice(value : Product):
+    price = value.price
+    if value.discount:
+        price -= (price * value.discount / 100)
+    return price.amount
 
-@register.filter(name='hash')
-def hash(value, arg):
-    return value.get(arg, None)
+@register.filter(name = 'getTotalPrice')
+def getTotalPrice(value : Product, arg : int):
+    price = value.price * int(arg)
+    if value.discount:
+        price -= (price * value.discount / 100)
+    return price.amount
+
+
 

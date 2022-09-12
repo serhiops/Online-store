@@ -49,14 +49,18 @@
 						<div class="details_name">{{ product.name }}</div>
                             {% if product.discount %}
 						        <div class="details_discount">{{ product.price.currency }} {{ product.price.amount|intcomma  }}</div>
-						        <div class="details_price">{{ product.price.currency }} {{ product.price.amount|getDiscountPrice:product.discount }}</div>
+						        <div class="details_price">{{ product.price.currency }} {{ product|getDiscountPrice }}</div>
                             {% else %}
                                 <div class="details_price">{{ product.price.currency }} {{ product.price.amount|intcomma  }}</div>
                             {% endif %}
 						<!-- In Stock -->
 						<div class="in_stock_container">
 							<div class="availability">Availability:</div>
-							<span>In Stock</span>
+							{% if product.in_stock %}
+								<span>In Stock</span>
+							{% else %}
+								<span style="color:red;">Out of Stock</span>
+							{% endif %}
 						</div>
 						<div class="details_text">
 							<p>{{ product.description|truncatechars:360 }}</p> 

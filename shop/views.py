@@ -1,11 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse
-from .models import Category, Product, Cart
+from .models import Category, Product, Cart, Ordering
 from django.views.generic import ListView, DetailView, FormView
 from . import forms
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.forms import Form
+from django.forms import Form, modelformset_factory
+from .mixins import BaseMixin
 
 def index(request : HttpRequest) -> HttpResponse:
     categories = Category.objects.filter(is_active = True)
@@ -16,7 +17,7 @@ def index(request : HttpRequest) -> HttpResponse:
     }
     return render(request, 'shop/index.html', context)
 
-class ByCategory(ListView):
+class ByCategory(ListView, BaseMixin):
     template_name = 'shop/product/by_category.html'
     context_object_name = 'products'
     paginate_by = 12
@@ -26,11 +27,11 @@ class ByCategory(ListView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.filter(is_active = True)
         context['currentCategory'] = Category.objects.get(slug = self.kwargs['categorySlug'])
         return context
+   
 
-class DetailProduct(DetailView, FormView):
+class DetailProduct(DetailView, FormView, BaseMixin):
     model = Product
     form_class = forms.AddToCartForm
     template_name = 'shop/product/detail_product.html'
@@ -40,7 +41,6 @@ class DetailProduct(DetailView, FormView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.filter(is_active = True)
         context['currentCategory'] = Category.objects.get(slug = self.kwargs['categorySlug'])
         context['relatedProducts'] = Product.objects.filter(is_active = True).order_by('?')[:4]
         return context
@@ -61,24 +61,58 @@ class DetailProduct(DetailView, FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form: Form) -> HttpResponse:
-        messages.error(self.request, 'Помилка :(')
+        messages.error(self.request, form.errors.as_text())
         return super().form_invalid(form)
 
-class CartView(FormView, ListView):
-    template_name = 'shop/cart.html'
-    success_url = reverse_lazy('shop:index')
-    context_object_name = 'products'
-    form_class = forms.AddToCartForm
 
-    def get_queryset(self) -> list:
-        data = self.request.session.get('cart_pk_list', False)
-        if data:
-            return { Product.objects.get(pk = x) : data[x] for x in data }
+def cartView(request : HttpRequest) -> HttpResponse:
+    products = list()
+    context = dict()
+    if request.user.is_authenticated:
+ 
+        products = request.user.cartListUser.all() 
+        CartFormSet = modelformset_factory( 
+                                            model = Cart, fields = ('qty', ), 
+                                            extra = 0, formset = forms.MyFormSet, 
+                                            form = forms.CartForm
+                                        )
+        if request.method == 'POST' and request.user.is_authenticated:
+            d =  request.POST.dict()
+            d['form-TOTAL_FORMS'] = products.count()            #https://docs.djangoproject.com/en/4.1/topics/forms/formsets/
+            d['form-INITIAL_FORMS'] = '0' 
+            form = CartFormSet(data = d)
+            if form.is_valid():
+                for i in form.cleaned_data:
+                    qrst = Ordering.objects.filter(user = request.user, product = i['id'].product) 
+                    if Ordering.objects.filter(user = request.user, product = i['id'].product) :
+                        [ x.delete() for x in qrst ]
+                    Ordering.objects.create( 
+                        user          = request.user,
+                        product       = i['id'].product,
+                        qty           = i['qty'],
+                        current_price = i['id'].product.price - (i['id'].product.price * i['id'].product.discount / 100) if 
+                                                                                    i['id'].product.discount else i['id'].product.price,
+                    )
+                messages.success(request, 'Ви оформили змовлення, чекайти поки з вами зв\'яжуться')
+                return redirect('shop:index')   
+        else:
+            form = CartFormSet( queryset = products )
 
-        if self.request.user.is_authenticated:
-            return { x.product : x.qty for x in Cart.objects.filter(user = self.request.user) }
-        return []
+        context = {
+            'products' : zip(form, products),
+        }
+    data = request.session.get('cart_pk_list', {})
+    if data and not request.user.is_authenticated:
+        context = {
+            'products' :zip((Product.objects.get(pk = x) for x in data), (data[x] for x in data))
+        }
+    return render( request, 'shop/cart.html', context)
 
-    def form_valid(self, form: Form) -> HttpResponse:
-        print(form.cleaned_data)
-        return super().form_valid(form)
+
+def clearCart(request : HttpRequest) -> HttpResponse:
+    if request.user.is_authenticated:
+        request.user.cartListUser.all().delete()
+    if  request.session.get('cart_pk_list', False):
+        del request.session['cart_pk_list']
+    messages.success(request, 'Ви успішно очистили кошик!')
+    return redirect('shop:index')

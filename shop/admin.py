@@ -43,19 +43,22 @@ class IpAdmin(admin.ModelAdmin):
     list_display_links = ('ip',)
 
 class OrderingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'product', 'qty', 'created')
-    list_display_links = ('user', 'product',)
+    list_display = ('user', 'created')
+    list_display_links = ('user',)
     list_filter = ('created',)
-    search_fields = ('created', )    
+    search_fields = ('created',)    
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id',)
 
 admin.site.register(Photo, PhotoAdmin)
 admin.site.register(Ordering, OrderingAdmin)
+admin.site.register(Product, ProductAdmin)
+
 admin.site.register(Ip, IpAdmin)
 admin.site.register(Cart, CartAdmin)
-admin.site.register(Product, ProductAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
+
+
