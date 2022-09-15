@@ -8,14 +8,6 @@
     {% csrf_token %}
     <div class="row">
         <div class="col-xl-6"> 
-            <label for="{{ form.username.id_for_label }}">Login</label>
-            {{ form.username }}
-            <div class="invalid-feedback">
-                {{ form.username.errors }}
-            </div>
-        </div>
-
-        <div class="col-xl-6"> 
             <label for="{{ form.email.id_for_label }}">Email</label>
             {{ form.email }}
         <div class="invalid-feedback">

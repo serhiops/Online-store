@@ -10,7 +10,7 @@
                                 <li class="hassubs active">
                                     <a href="{% url 'shop:index' %}">Home</a>
                                     <ul>
-                                        <li><a href="categories.html">Categories</a></li>
+                                        <li><a href="#">Мій акаунт</a></li>
                                         <li><a href="product.html">Product</a></li>
                                         <li><a href="cart.html">Cart</a></li>
                                         <li><a href="checkout.html">Check out</a></li>
@@ -36,7 +36,7 @@
                         </nav>
                         <div class="header_extra ml-auto">
                             <div class="shopping_cart">
-                                <a href="{% url 'shop:cart' %}">
+                                <a {% if cartSize %}href="{% url 'shop:cart' %}"{% else %} style="pointer-events: none;cursor: default;color: #888;" {% endif %}>
                                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                              viewBox="0 0 489 489" style="enable-background:new 0 0 489 489;" xml:space="preserve">
                                         <g>

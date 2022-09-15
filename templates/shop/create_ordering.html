@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block loadCSS %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/checkout.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/checkout_responsive.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/mystyles.css'%}">
+{% endblock loadCSS %}
+{% block content %}
+<div class="home">
+    <div class="home_container">
+        <div class="home_background" style="background-image:url({% static 'images/cart.jpg'%})"></div>
+        <div class="home_content_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="home_content">
+                            <div class="breadcrumbs">
+                                <ul>
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="cart.html">Shopping Cart</a></li>
+                                    <li>Checkout</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Checkout -->
+ 
+<div class="checkout">
+    <div class="container">
+        <div class="row">
+ 
+            <!-- Billing Info -->
+            <div class="col-lg-6">
+                <div class="billing checkout_section">
+                    <div class="section_title">Billing Address</div>
+                    <div class="section_subtitle">Enter your address info</div>
+                    <div class="checkout_form_container">
+                        
+                        <form action="#" id="checkout_form" class="checkout_form" method="post">
+                            {{ form.none_field.errors }}
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-xl-6">
+                                    <!-- Name -->
+                                    <label for="{{ form.first_name.id_for_label }}">First Name*</label>
+                                    {{ form.first_name }}
+                                    <div class="invalid-feedback">
+                                        {{ form.first_name.errors }}
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 last_name_col">
+                                    <!-- Last Name -->
+                                    <label for="{{ form.last_name.id_for_label }}">Last Name*</label>
+                                    {{ form.last_name }}
+                                    <div class="invalid-feedback">
+                                        {{ form.last_name.errors }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="{{ form.city.id_for_label }}">City*</label>
+                                {{ form.city }}
+                                <div class="invalid-feedback">
+                                    {{ form.city.errors }}
+                                </div>
+                                <datalist id="cityname">
+
+                                </datalist>
+
+                            </div>
+
+                            <div>
+                                <label for="{{ form.post_office.id_for_label }}">Post Office*</label>
+                                {{ form.post_office }}
+                                <div class="invalid-feedback">
+                                    {{ form.post_office.errors }}
+                                </div>
+                                <datalist id="postname">
+
+                                </datalist>
+
+                                
+                            </div>
+                            
+                            <div class="checkout_extra">
+                                <div>
+                                    <input type="checkbox" id="checkbox_terms" name="regular_checkbox" class="regular_checkbox" checked="checked">
+                                    <label for="checkbox_terms"><img src="images/check.png" alt=""></label>
+                                    <span class="checkbox_title">Terms and conditions</span>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="checkbox_account" name="regular_checkbox" class="regular_checkbox">
+                                    <label for="checkbox_account"><img src="images/check.png" alt=""></label>
+                                    <span class="checkbox_title">Create an account</span>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="checkbox_newsletter" name="regular_checkbox" class="regular_checkbox">
+                                    <label for="checkbox_newsletter"><img src="images/check.png" alt=""></label>
+                                    <span class="checkbox_title">Subscribe to our newsletter</span>
+                                </div>
+                            </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Info -->
+
+            <div class="col-lg-6">
+                <div class="order checkout_section">
+                    <div class="section_title">Your order</div>
+                    <div class="section_subtitle">Order details</div>
+
+                    <!-- Order details -->
+                    <div class="order_list_container">
+                        <div class="order_list_bar d-flex flex-row align-items-center justify-content-start">
+                            <div class="order_list_title">Product</div>
+                            <div class="order_list_value ml-auto">Total</div>
+                        </div>
+                        <ul class="order_list">
+                            <li class="d-flex flex-row align-items-center justify-content-start">
+                                <div class="order_list_title">Cocktail Yellow dress</div>
+                                <div class="order_list_value ml-auto">$59.90</div>
+                            </li>
+                            <li class="d-flex flex-row align-items-center justify-content-start">
+                                <div class="order_list_title">Subtotal</div>
+                                <div class="order_list_value ml-auto">$59.90</div>
+                            </li>
+                            <li class="d-flex flex-row align-items-center justify-content-start">
+                                <div class="order_list_title">Shipping</div>
+                                <div class="order_list_value ml-auto">Free</div>
+                            </li>
+                            <li class="d-flex flex-row align-items-center justify-content-start">
+                                <div class="order_list_title">Total</div>
+                                <div class="order_list_value ml-auto">$59.90</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="payment">
+                        <div class="payment_options">
+                            
+                            {% for radio in form.payment %}
+                            {% if forloop.counter != 1 %}
+                                <label class="payment_option clearfix">{{ radio.choice_label }}
+                                    {{ radio.tag }}
+                                    <span class="checkmark"></span>
+                                </label>
+                            {% endif %}
+                            {% endfor %}
+
+                        </div>    
+                    </div>
+                    <div class="order_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra temp or so dales. Phasellus sagittis auctor gravida. Integ er bibendum sodales arcu id te mpus. Ut consectetur lacus.</div>
+                    <button type="submit" class="btn btn-primary">Primary</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}        
+
+{% block loadJS %}
+<script src="{% static 'js/checkout.js'%}"></script>
+<script src="{% static 'js/create_ordering.js'%}"></script>
+{% endblock loadJS %}
+
+<!--
+    <fieldset>
+
+                                {% for radio in form.payment %}
+                                <label class="payment_option clearfix">{{ radio.choice_label }}
+                                    {{ radio.tag }}
+                                    <span class="checkmark"></span>
+                                </label>
+                                {% endfor %}
+                            </fieldset>
+-->

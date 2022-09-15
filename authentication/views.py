@@ -4,7 +4,7 @@ from django.contrib.auth.views import LoginView, PasswordResetView, PasswordRese
 from . import forms
 from django.contrib import messages
 from django.contrib.auth import logout, login
-from django.views.generic.edit import FormView
+from django.views.generic import FormView
 from .addintionaly.funcs import getErrorMessageString, sendVerifyEmail
 from django.urls import reverse_lazy
 from django.views import View
@@ -13,10 +13,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.http import urlsafe_base64_decode
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User as _User
-from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
-
-User = get_user_model()
+from shop.models import User
+from django.contrib.messages.views import SuccessMessageMixin
 
 class EmailVerify(View):
 
@@ -25,7 +24,7 @@ class EmailVerify(View):
         if user is not None and default_token_generator.check_token(user, token):
             user.email_verify = True
             user.save()
-            login(request, user)
+            login(request, user,  backend='django.contrib.auth.backends.ModelBackend')
             messages.success(request, 'Ви упішно зареєструвалися!')
             return redirect('shop:index')
 
@@ -92,13 +91,13 @@ class PasswordReset(PasswordResetView):
         form.fields["email"].widget.attrs["class"] = "form-control"
         return form 
 
-class PasswordResetConfirm(PasswordResetConfirmView):
-    template_name = "authentication/password_reset/password_confirm.html"
-    success_url = reverse_lazy("authentication:login")
+class PasswordResetConfirm(SuccessMessageMixin, PasswordResetConfirmView):
+    template_name = 'authentication/password_reset/password_confirm.html'
+    success_url = reverse_lazy('authentication:login')
+    success_message = 'Ви успішно змінили пароль!'
 
     def get_form(self, *args, **kwargs):
         form = super().get_form(*args, **kwargs)
         form.fields["new_password1"].widget.attrs["class"] = "contact_input"
         form.fields["new_password2"].widget.attrs["class"] = "contact_input"
         return form
-

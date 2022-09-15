@@ -1,16 +1,32 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 
 from authentication.forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser, Category, Review, Product, Cart, Ip, Ordering, Photo
+from .models import CustomUser, Category, Review, Product, Cart, Ip, TempOrdering, Photo, Ordering
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ('email', 'username', 'email_verify')
+    readonly_fields = ("date_joined",)
+    list_display = ('email',  'email_verify')
     list_editable = ('email_verify',)
-    list_display_links = ('email','username')
+    list_display_links = ('email',)
+    ordering = ('email',)
+    list_filter = ('is_admin',)
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Permissions', {'fields': ('is_admin',)}),
+    )
+    search_fields = ('email',)
+    ordering = ('email',)
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2'),
+        }),
+    )
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -42,18 +58,22 @@ class IpAdmin(admin.ModelAdmin):
     list_display = ('ip',)
     list_display_links = ('ip',)
 
-class OrderingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'created')
-    list_display_links = ('user',)
-    list_filter = ('created',)
+class TempOrderingAdmin(admin.ModelAdmin):
+    list_display = ('product','main_ordering','created',)
+    list_filter = ('product', 'main_ordering','created',)
     search_fields = ('created',)    
 
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id',)
 
+class OrderingAdmin(admin.ModelAdmin):
+    list_display = ('user', 'first_name', 'last_name')
+    list_display_links = ('user', 'first_name', 'last_name')
+
 admin.site.register(Photo, PhotoAdmin)
-admin.site.register(Ordering, OrderingAdmin)
+admin.site.register(TempOrdering, TempOrderingAdmin)
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Ordering, OrderingAdmin)
 
 admin.site.register(Ip, IpAdmin)
 admin.site.register(Cart, CartAdmin)
@@ -62,3 +82,4 @@ admin.site.register(Category, CategoryAdmin)
 admin.site.register(CustomUser, CustomUserAdmin)
 
 
+admin.site.unregister(Group)

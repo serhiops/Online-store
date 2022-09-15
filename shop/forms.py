@@ -1,5 +1,5 @@
 from django import forms
-from .models import Cart
+from .models import Cart, Ordering
 
 class AddToCartForm(forms.Form):
     qty = forms.CharField(widget = forms.TextInput(attrs={
@@ -33,3 +33,44 @@ class MyFormSet(forms.BaseModelFormSet):
         form.fields['qty'].label = ''
         return super().add_fields(form, index)
 
+
+
+class OrderingForm(forms.ModelForm):
+    #payment = forms.MultipleChoiceField(choices=Ordering.TYPE_OF_PAYMENT, widget= forms.RadioSelect(attrs={
+    #    'class' : 'form-control',
+    #    'style' : 'color:black;'
+    #}))
+    class Meta:
+        model = Ordering
+        fields = ('first_name', 'last_name', 'city', 'post_office', 'payment')
+
+        widgets = {
+            'first_name' : forms.TextInput(attrs={
+                'id' : 'checkout_name',
+                'required' : 'required',
+                'class' : 'form-control black-color',
+            }),
+            'last_name' : forms.TextInput(attrs={
+                'id' : 'checkout_last_name',
+                'required' : 'required',
+                'class' : 'form-control black-color',
+            }),
+            'city' : forms.TextInput(attrs={
+                'city' : 'city',
+                'list' : 'cityname',
+                'class' : 'form-control black-color',
+                'id' : 'checkout_city',
+            }),
+            'post_office' : forms.TextInput(attrs={
+                'name' : 'post',
+                'list' : 'postname',
+                'class' : 'form-control black-color',
+                'id' : 'checkout_post',
+                'placeholder' : 'Введіть номер відділення або поштомату',
+                'disabled' : 'disabled',
+            }),
+            'payment' : forms.RadioSelect(attrs={
+                'class' : 'form-control black-color',
+                })
+        }
+    

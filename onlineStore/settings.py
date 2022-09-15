@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthenticationConfig',
     'djmoney',
     'config',
+    'rest_framework',
 
     'allauth',
     'allauth.account',
@@ -171,6 +172,12 @@ ACCOUNT_LOGOUT_ON_GET= True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 
+SOCIALACCOUNT_LOGIN_ON_GET = True
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_USERNAME_REQUIRED = False
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -183,4 +190,3 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-SOCIALACCOUNT_LOGIN_ON_GET = True

@@ -51,10 +51,10 @@
                 </div>
             </div>
         </div>
-        <div class="row cart_items_row">
+        <div class="row cart_items_row"> 
             <div class="col">
                 <!-- Cart Item -->
-                
+                <form method="post">
                 {% if user.is_authenticated %}
                     {% include 'shop/inc/registerUserCart.html' %}
                 {% else %}

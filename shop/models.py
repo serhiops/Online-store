@@ -3,10 +3,35 @@ from django.db import models
 from djmoney.models.fields import MoneyField
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from .addintionaly.user_manager import UserManager
+from django.contrib.auth.models import PermissionsMixin
 
-class CustomUser(AbstractUser):
-    number_of_phone = models.CharField(max_length=15, verbose_name='number of phone', blank=True, null=True)
+class CustomUser(AbstractUser,PermissionsMixin):
+    username = None
+    number_of_phone = models.CharField(max_length=15, verbose_name='number of phone', blank=True)
     email_verify = models.BooleanField(default=False, verbose_name='is verify email')
+    email = models.EmailField('email address', unique=True)
+    first_name = models.CharField('first name', max_length=30, blank=True)
+    last_name = models.CharField('last name', max_length=30, blank=True)
+    date_joined = models.DateTimeField('date joined', auto_now_add=True)
+    is_active = models.BooleanField('active', default=True)
+    is_admin = models.BooleanField('is admin', default=False)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ()
+
+    def get_full_name(self):
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        return self.first_name
+    @property
+    def is_staff(self):
+        return self.is_admin
+        
 
 class Category(models.Model):
     name = models.CharField(max_length=64, verbose_name="name")
@@ -79,15 +104,39 @@ class Ip(models.Model):
     def __str__(self):
         return self.ip
 
-class Ordering(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="get_user", verbose_name="buyer")
+class TempOrdering(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="get_pr", verbose_name="product")
     qty = models.PositiveIntegerField(default=1, verbose_name="qty")
     current_price = MoneyField(max_digits=14, decimal_places=2, default_currency='UAH', verbose_name="price")
     created = models.DateTimeField(auto_now_add=True, verbose_name="created")
+    main_ordering = models.ForeignKey('Ordering', on_delete=models.CASCADE, related_name='tempOrderingList')
+
     class Meta:
         ordering = ("-created",)
 
+class Ordering(models.Model):
+
+    MASTERCARD = 'MC'
+    PAYPAL = 'PP'
+    CASH_ON_DELAVERY = 'COD'
+    CREDIT_CARD = 'CC'
+    DIRECT_BANK_TRANSFER = 'DBT'
+
+    TYPE_OF_PAYMENT = [
+        (MASTERCARD, 'Mastercard'),
+        (PAYPAL, 'Paypal'),
+        (CASH_ON_DELAVERY, 'Cash on delivery'),
+        (CREDIT_CARD, 'Credit card'),
+        (DIRECT_BANK_TRANSFER, 'Direct bank transfer')
+    ]
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="get_user", verbose_name="buyer")
+    first_name = models.CharField(max_length=32, blank = True)
+    last_name = models.CharField(max_length=32, blank = True)
+    city = models.CharField(max_length=50, blank = True)
+    post_office = models.CharField(max_length=64, blank = True)
+    created = models.DateTimeField(auto_now_add=True, verbose_name="created")
+    payment = models.CharField(default=DIRECT_BANK_TRANSFER, choices=TYPE_OF_PAYMENT, max_length=3, blank = True)
+    is_done = models.BooleanField(default=False, verbose_name='is done')
 
 User = get_user_model()
 
