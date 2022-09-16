@@ -17,7 +17,7 @@
          </div>
          
          <div class="cart_item_price">
-            {{ CartObject.product.price.currency }} {{ CartObject.product|getDiscountPrice }}
+            {{ CartObject.product.price.currency }} {{ CartObject.product|getDiscountPrice|intcomma }}
          </div>              
         <div class="cart_item_quantity">
              <div class="product_quantity_container">
@@ -27,6 +27,6 @@
                  </div>
              </div>
             </div>
-         <div class="cart_item_total">{{ CartObject.product.price.currency }} {{ CartObject.product|getTotalPrice:form.qty.value }}</div>
+         <div class="cart_item_total">{{ CartObject.product.price.currency }} {{ CartObject.product|getTotalPrice:form.qty.value|intcomma }}</div>
      </div>
     {% endfor %}

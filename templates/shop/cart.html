@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block loadCSS %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}">
@@ -120,7 +121,7 @@
                             </li>
                             <li class="d-flex flex-row align-items-center justify-content-start">
                                 <div class="cart_total_title">Total</div>
-                                <div class="cart_total_value ml-auto">{{ total_price }}</div>
+                                <div class="cart_total_value ml-auto">{{ totalPrice.currency }} {{ totalPrice.amount|intcomma  }}</div>
                             </li>
                         </ul>
                     </div>

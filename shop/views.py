@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.forms import Form, modelformset_factory, ModelForm
 from .mixins import BaseMixin
 from authentication.addintionaly.funcs import getErrorMessageString
+from .addintionaly.funcs import getPriceByDiscount
 
 class Index(TemplateView, BaseMixin):
     template_name = 'shop/index.html'
@@ -93,17 +94,22 @@ def cartView(request : HttpRequest) -> HttpResponse:
                     TempOrdering.objects.create( 
                         product       = i['id'].product,
                         qty           = i['qty'],
-                        current_price = i['id'].product.price - (i['id'].product.price * i['id'].product.discount / 100) if 
-                                                                                    i['id'].product.discount else i['id'].product.price,
+                        current_price = getPriceByDiscount(i['id'].product),
                         main_ordering = ordering,
                     )
                 return redirect('shop:create_ordering')   
         else:
             form = CartFormSet( queryset = products )
             context['products'] =  zip(form, products)
+            context['totalPrice'] = sum( getPriceByDiscount(x.product) * x.qty for x in products )
     data = request.session.get('cart_pk_list', {})
     if data and not request.user.is_authenticated:
-        context['products'] = zip((Product.objects.get(pk = x) for x in data), (data[x] for x in data))
+        productArr = [ Product.objects.get(pk = x) for x in data ]
+        qtyArr = [ data[x] for x in data ]
+
+        context['products'] = zip(productArr, qtyArr)
+        context['totalPrice'] = sum( getPriceByDiscount(product) * qty for product, qty in zip(productArr, qtyArr) )
+
     
     return render( request, 'shop/cart.html', context)
 
