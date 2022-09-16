@@ -16,6 +16,7 @@ from django.contrib.auth.models import User as _User
 from django.contrib.auth.tokens import default_token_generator
 from shop.models import User
 from django.contrib.messages.views import SuccessMessageMixin
+from shop.mixins import BaseMixin
 
 class EmailVerify(View):
 
@@ -46,7 +47,7 @@ class EmailVerify(View):
             user = None
         return user
 
-class Login(LoginView):
+class Login(LoginView, BaseMixin):
     template_name = 'authentication/authentication/login.html'
     form_class = forms.LoginForm
 
@@ -59,7 +60,7 @@ class Login(LoginView):
         return super().form_invalid(form)
     
 
-class Register(FormView):
+class Register(FormView, BaseMixin):
     template_name = 'authentication/authentication/register.html'
     form_class = forms.CustomUserCreationForm
     success_url = reverse_lazy('authentication:confirm_email')

@@ -17,7 +17,7 @@ class CustomUserCreationForm(UserCreationForm):
             'email' : forms.EmailInput(attrs={
                 'class' : 'form-control',
             }),
-            'number_of_phone': forms.NumberInput(
+            'number_of_phone': forms.TextInput(
                 attrs={
                 'class' : 'form-control',
             })

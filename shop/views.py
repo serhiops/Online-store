@@ -1,21 +1,44 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse
 from .models import Category, Product, Cart, TempOrdering, Ordering
-from django.views.generic import ListView, DetailView, FormView,TemplateView
+from django.views.generic import ListView, DetailView, FormView
 from . import forms
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.forms import Form, modelformset_factory, ModelForm
 from .mixins import BaseMixin
 from authentication.addintionaly.funcs import getErrorMessageString
-from .addintionaly.funcs import getPriceByDiscount
+from .addintionaly.funcs import getPriceByDiscount 
+from django.db.models import Q
 
-class Index(TemplateView, BaseMixin):
+class Index(FormView, BaseMixin):
     template_name = 'shop/index.html'
+    form_class = forms.SearchForm
+    success_url = reverse_lazy('shop:search_products')
+    paginate_by = 12
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context['products'] = Product.objects.filter(is_active = True)[:8]
+        context['serchMenu'] = True
+        return context
+
+class SearchProducts(ListView, BaseMixin):
+    template_name = 'shop/product/by_category.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        text = self.request.GET['text']
+        return Product.objects.filter(Q(name__icontains = text) | Q(description__icontains = text))
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        count = self.get_queryset().count()
+
+        context['serchText'] = self.request.GET['text']
+        context['serchPage'] = True
+        context['messageText'] = 'По запиту %s знайдено %d товарів!' % (self.request.GET['text'], count)
+        context['messageType'] = 'success' if count else 'danger'
         return context
 
 class ByCategory(ListView, BaseMixin):
@@ -29,6 +52,7 @@ class ByCategory(ListView, BaseMixin):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context['currentCategory'] = Category.objects.get(slug = self.kwargs['categorySlug'])
+        context['serchMenu'] = True
         return context
    
 class DetailProduct(DetailView, FormView, BaseMixin):
@@ -140,3 +164,4 @@ class CreateOrdering(FormView):
         ordering.save()
         messages.success(self.request, 'Ви успішно подали заявку на замовлення!')
         return super().form_valid(form)
+

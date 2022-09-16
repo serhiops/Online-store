@@ -24,14 +24,6 @@
     </div>
 
     <div class="col-xl-6 last_name_col">
-        <label for="{{ form.password2.id_for_label }}">Repeat your password</label>
-        {{ form.password2 }}
-        <div class="invalid-feedback">
-            {{ form.password2.errors }}
-        </div>
-    </div>
-
-    <div class="col-xl-6 last_name_col">
         <label for="{{ form.number_of_phone.id_for_label }}">Number of phone</label>
         {{ form.number_of_phone }}
         <div class="invalid-feedback">
@@ -39,6 +31,13 @@
         </div>
     </div>
 
+    <div class="col-xl-6 last_name_col">
+        <label for="{{ form.password2.id_for_label }}">Repeat your password</label>
+        {{ form.password2 }}
+        <div class="invalid-feedback">
+            {{ form.password2.errors }}
+        </div>
+    </div>
 </div>
 <button type="submit" class="button contact_button"><span>Send Message</span></button>
 </form>

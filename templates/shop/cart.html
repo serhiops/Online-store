@@ -80,24 +80,9 @@
                 
                 <!-- Delivery -->
                 <div class="delivery">
-                    <div class="section_title">Shipping method</div>
-                    <div class="section_subtitle">Select the one you want</div>
-                    <div class="delivery_options">
-                        <label class="delivery_option clearfix">Next day delivery
-                            <input type="radio" name="radio">
-                            <span class="checkmark"></span>
-                            <span class="delivery_price">$4.99</span>
-                        </label>
-                        <label class="delivery_option clearfix">Standard delivery
-                            <input type="radio" name="radio">
-                            <span class="checkmark"></span>
-                            <span class="delivery_price">$1.99</span>
-                        </label>
-                        <label class="delivery_option clearfix">Personal pickup
-                            <input type="radio" checked="checked" name="radio">
-                            <span class="checkmark"></span>
-                            <span class="delivery_price">Free</span>
-                        </label>
+                    <div class="section_title">Зверніть увагу!</div>
+                    <div class="section_subtitle black-color">
+                        У вас може бути активним лише одне замовлення! Тому, якщо ви хочете додати або видалити товари, вам потрібно додати їх до кошика та переоформити замовлення!
                     </div>
                 </div>
 
@@ -112,20 +97,12 @@
                     <div class="cart_total_container">
                         <ul>
                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                <div class="cart_total_title">Subtotal</div>
-                                <div class="cart_total_value ml-auto">$790.90</div>
-                            </li>
-                            <li class="d-flex flex-row align-items-center justify-content-start">
-                                <div class="cart_total_title">Shipping</div>
-                                <div class="cart_total_value ml-auto">Free</div>
-                            </li>
-                            <li class="d-flex flex-row align-items-center justify-content-start">
                                 <div class="cart_total_title">Total</div>
                                 <div class="cart_total_value ml-auto">{{ totalPrice.currency }} {{ totalPrice.amount|intcomma  }}</div>
                             </li>
                         </ul>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-block {% if not user.is_authenticated %}disabled{% endif %}">Proceed to checkout</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block"{% if not user.is_authenticated %}disabled{% endif %}>Proceed to checkout</button>
                     </form>
                 </div>
             </div>

@@ -28,11 +28,10 @@ class CustomUser(AbstractUser,PermissionsMixin):
 
     def get_short_name(self):
         return self.first_name
+    
     @property
     def is_staff(self):
-        return self.is_admin
-        
-
+        return self.is_admin        
 class Category(models.Model):
     name = models.CharField(max_length=64, verbose_name="name")
     description = models.CharField(max_length=128,verbose_name="description")
@@ -48,8 +47,11 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("shop:by_category", kwargs={"categorySlug": self.slug})
-    
 
+    def save(self, *args, **kwargs) -> None:
+        print('Save')
+        return super().save(*args, **kwargs)
+    
 class Review(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="get_author", verbose_name="author")
     text = models.TextField(max_length=1024, verbose_name="text")
@@ -137,6 +139,9 @@ class Ordering(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="created")
     payment = models.CharField(default=DIRECT_BANK_TRANSFER, choices=TYPE_OF_PAYMENT, max_length=3, blank = True)
     is_done = models.BooleanField(default=False, verbose_name='is done')
+
+class MailingList(models.Model):
+    email = models.EmailField(unique=True)
 
 User = get_user_model()
 

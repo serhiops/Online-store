@@ -1,5 +1,5 @@
 from django import forms
-from .models import Cart, Ordering
+from .models import Cart, Ordering, MailingList
 
 class AddToCartForm(forms.Form):
     qty = forms.CharField(widget = forms.TextInput(attrs={
@@ -72,5 +72,27 @@ class OrderingForm(forms.ModelForm):
             'payment' : forms.RadioSelect(attrs={
                 'class' : 'form-control black-color',
                 })
+        }
+
+class SearchForm(forms.Form):
+
+    text = forms.CharField(widget=forms.TextInput(attrs={
+        'type' : 'text',
+        'class' : 'search_input',
+        'placeholder' : 'Search',
+        'required' : 'required',
+    }))
+
+class NewsletterForm(forms.ModelForm):
+    
+    class Meta:
+        model = MailingList
+        fields = ('email',)
+        widgets = {
+            'email' : forms.EmailInput(attrs={
+                'class' : 'newsletter_input',
+                'type' : 'email',
+                'required' : 'required',
+            })
         }
     
