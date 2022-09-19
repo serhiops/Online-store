@@ -2,16 +2,16 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
-from authentication.forms import CustomUserCreationForm, CustomUserChangeForm
+from authentication.forms import CustomUserChangeForm, SignupForm
+
 from .models import CustomUser, Category, Review, Product, Cart, Ip, TempOrdering, Photo, Ordering
 
 class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
+    add_form = SignupForm
     form = CustomUserChangeForm
     model = CustomUser
-    readonly_fields = ("date_joined",)
-    list_display = ('email',  'email_verify')
-    list_editable = ('email_verify',)
+    readonly_fields = ('date_joined',)
+    list_display = ('email',  )
     list_display_links = ('email',)
     ordering = ('email',)
     list_filter = ('is_admin',)

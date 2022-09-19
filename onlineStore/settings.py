@@ -123,7 +123,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
 
 TIME_ZONE = 'UTC'
 
@@ -178,6 +178,12 @@ ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_USERNAME_REQUIRED = False
 
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
+
+ACCOUNT_LOGOUT_ON_GET = True
+
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -189,4 +195,14 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+ 
+ACCOUNT_FORMS = {
+    'login': 'authentication.forms.LoginForm',
+    'signup' : 'authentication.forms.SignupForm',
+    'reset_password': 'authentication.forms.ResetPasswordForm',
+    'reset_password_from_key': 'authentication.forms.ResetPasswordKeyForm',
+}
 
+SOCIALACCOUNT_FORMS = {
+    'signup' : 'authentication.forms.SocialAccountSignupForm',
+}

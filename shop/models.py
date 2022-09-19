@@ -9,7 +9,6 @@ from django.contrib.auth.models import PermissionsMixin
 class CustomUser(AbstractUser,PermissionsMixin):
     username = None
     number_of_phone = models.CharField(max_length=15, verbose_name='number of phone', blank=True)
-    email_verify = models.BooleanField(default=False, verbose_name='is verify email')
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField('first name', max_length=30, blank=True)
     last_name = models.CharField('last name', max_length=30, blank=True)
@@ -31,7 +30,8 @@ class CustomUser(AbstractUser,PermissionsMixin):
     
     @property
     def is_staff(self):
-        return self.is_admin        
+        return self.is_admin    
+            
 class Category(models.Model):
     name = models.CharField(max_length=64, verbose_name="name")
     description = models.CharField(max_length=128,verbose_name="description")
@@ -139,6 +139,7 @@ class Ordering(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="created")
     payment = models.CharField(default=DIRECT_BANK_TRANSFER, choices=TYPE_OF_PAYMENT, max_length=3, blank = True)
     is_done = models.BooleanField(default=False, verbose_name='is done')
+    total_price = MoneyField(max_digits=14, decimal_places=2, default_currency='UAH', verbose_name="price")  
 
 class MailingList(models.Model):
     email = models.EmailField(unique=True)

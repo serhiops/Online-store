@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
+{% load persent %}
 
 {% block loadCSS %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/checkout.css'%}">
@@ -89,26 +91,6 @@
 
                                 
                             </div>
-                            
-                            <div class="checkout_extra">
-                                <div>
-                                    <input type="checkbox" id="checkbox_terms" name="regular_checkbox" class="regular_checkbox" checked="checked">
-                                    <label for="checkbox_terms"><img src="images/check.png" alt=""></label>
-                                    <span class="checkbox_title">Terms and conditions</span>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="checkbox_account" name="regular_checkbox" class="regular_checkbox">
-                                    <label for="checkbox_account"><img src="images/check.png" alt=""></label>
-                                    <span class="checkbox_title">Create an account</span>
-                                </div>
-                                <div>
-                                    <input type="checkbox" id="checkbox_newsletter" name="regular_checkbox" class="regular_checkbox">
-                                    <label for="checkbox_newsletter"><img src="images/check.png" alt=""></label>
-                                    <span class="checkbox_title">Subscribe to our newsletter</span>
-                                </div>
-                            </div>
-                        
-
                     </div>
                 </div>
             </div>
@@ -124,24 +106,25 @@
                     <div class="order_list_container">
                         <div class="order_list_bar d-flex flex-row align-items-center justify-content-start">
                             <div class="order_list_title">Product</div>
+                            <div class="order_list_value ml-auto">Qty</div>
                             <div class="order_list_value ml-auto">Total</div>
                         </div>
+                        {% for ordering in tempOrderings %}
+                        <div class="order_list_bar d-flex flex-row align-items-center justify-content-start">
+                            <div class="order_list_title"><a href="{{ ordering.product.get_absolute_url }}">{{ ordering.product.name|truncatechars:15 }}</a></div>
+                            <div class="order_list_value ml-auto">{{ ordering.qty }}</div>
+                            <div class="order_list_value ml-auto">{{ ordering.current_price.currency }} {{ ordering|getPriceByQty|intcomma }}</div>
+                        </div>
+                        {% endfor %}
+                        <hr/>
                         <ul class="order_list">
                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                <div class="order_list_title">Cocktail Yellow dress</div>
-                                <div class="order_list_value ml-auto">$59.90</div>
+                                <div class="order_list_title">Доставка</div>
+                                <div class="order_list_value ml-auto">Нова Пошта</div>
                             </li>
                             <li class="d-flex flex-row align-items-center justify-content-start">
-                                <div class="order_list_title">Subtotal</div>
-                                <div class="order_list_value ml-auto">$59.90</div>
-                            </li>
-                            <li class="d-flex flex-row align-items-center justify-content-start">
-                                <div class="order_list_title">Shipping</div>
-                                <div class="order_list_value ml-auto">Free</div>
-                            </li>
-                            <li class="d-flex flex-row align-items-center justify-content-start">
-                                <div class="order_list_title">Total</div>
-                                <div class="order_list_value ml-auto">$59.90</div>
+                                <div class="order_list_title">Всього</div>
+                                <div class="order_list_value ml-auto">{{ ordering.toal_price.currency }} {{ ordering.total_price.amount|intcomma  }}</div>
                             </li>
                         </ul>
                     </div>
@@ -159,14 +142,14 @@
 
                         </div>    
                     </div>
-                    <div class="order_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pharetra temp or so dales. Phasellus sagittis auctor gravida. Integ er bibendum sodales arcu id te mpus. Ut consectetur lacus.</div>
-                    <button type="submit" class="btn btn-primary">Primary</button>
+                    <button type="submit" class="newsletter_button trans_200"><span>Subscribe</span></button>
                 </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 {% endblock content %}        
 
 {% block loadJS %}

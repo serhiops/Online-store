@@ -1,6 +1,7 @@
 from django import forms
 from .models import Cart, Ordering, MailingList
 
+
 class AddToCartForm(forms.Form):
     qty = forms.CharField(widget = forms.TextInput(attrs={
         'id':'quantity_input',
@@ -13,7 +14,7 @@ class CartForm(forms.ModelForm):
     qty = forms.CharField(widget=forms.TextInput(attrs={
         'id':'quantity_input',
                 'type':'text',
-                'pattern':'[0-9]',
+                'pattern':'[1-9]',
                 'value':'1',
     }))
     class Meta:

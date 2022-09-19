@@ -23,6 +23,7 @@
                             {% endif %}
                         </div>
 						<div class="details_image_thumbnails d-flex flex-row align-items-start justify-content-between">
+
                             {% if product.photos.all.count == 1 %}
                                 <div class="details_image_thumbnail" data-image="{{ product.photos.first.image.url }}"><img src="{{ product.photos.first.image.url }}" alt=""></div>
                             {% else %}
@@ -33,12 +34,6 @@
                                 </div>
                                 {% endfor %}
                             {% endif %}
-                               <!--
-							<div class="details_image_thumbnail active" data-image="images/details_1.jpg"><img src="images/details_1.jpg" alt=""></div>
-							<div class="details_image_thumbnail" data-image="images/details_2.jpg"><img src="images/details_2.jpg" alt=""></div>
-							<div class="details_image_thumbnail" data-image="images/details_3.jpg"><img src="images/details_3.jpg" alt=""></div>
-							<div class="details_image_thumbnail" data-image="images/details_4.jpg"><img src="images/details_4.jpg" alt=""></div>
-                                --> 
                         </div>
 					</div>
 				</div>
@@ -79,6 +74,7 @@
 									<div id="quantity_dec_button" class="quantity_dec quantity_control"><i class="fa fa-chevron-down" aria-hidden="true"></i></div>
 								</div>
 							</div>
+							
 							<button type="submit" style="margin-left : 5%" class="btn btn-outline-dark btn-lg"{% if not product.in_stock %} disabled{% endif %}>Add to Cart</button>
 						</div>
 					</form>

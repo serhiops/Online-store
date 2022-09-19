@@ -11,7 +11,6 @@
         </div>
         <div class="cart_item_name_container">
             <div class="cart_item_name"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></div> 
-            <div class="cart_item_edit"><a href="{{ product.get_absolute_url }}">Edit Product</a></div>
         </div>
     </div>
     <!-- Price -->
@@ -23,7 +22,7 @@
         <div class="product_quantity_container">
             <div class="product_quantity clearfix">
                 <span>Qty</span>
-                <input id="quantity_input" type="text" pattern="[0-9]*" value="{{qty }}">
+                <input id="quantity_input" type="text" pattern="[1-9]*" value="{{qty }}">
             </div>
         </div>
     </div>

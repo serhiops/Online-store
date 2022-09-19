@@ -1,21 +1,24 @@
 from django import template
-from shop.models import Product
+from django.db import models
 
 register = template.Library()
 
 @register.filter(name='getDiscountPrice')
-def getDiscountPrice(value : Product):
+def getDiscountPrice(value : models.Model):
     price = value.price
     if value.discount:
         price -= (price * value.discount / 100)
     return price.amount
 
 @register.filter(name = 'getTotalPrice')
-def getTotalPrice(value : Product, arg : int):
+def getTotalPrice(value : models.Model, arg : int):
     price = value.price * int(arg)
     if value.discount:
         price -= (price * value.discount / 100)
     return price.amount
 
+@register.filter(name = 'getPriceByQty')
+def getPriceByQty(value : models.Model):
+    return value.product.price.amount if value.qty == 1 else  value.product.price.amount * value.qty
 
 

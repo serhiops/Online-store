@@ -27,10 +27,10 @@
                                 </li>
                                 <li><a href="contact.html">Contact</a></li>
                                 {% if not user.is_authenticated %}
-                                <li><a href="{% url 'authentication:login' %}">Авторизуватися</a></li>
-                                <li><a href="{% url 'authentication:register' %}">Зареєструватися</a></li>
+                                <li><a href="{% url 'account_login' %}">Авторизуватися</a></li>
+                                <li><a href="{% url 'account_signup' %}">Зареєструватися</a></li>
                                 {% else %}
-                                <li><a href="{% url 'authentication:logout' %}">Вийти</a></li>
+                                <li><a href="{% url 'account_logout' %}">Вийти</a></li>
                                 {% endif %}
                             </ul>
                         </nav>

@@ -7,8 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.forms import Form, modelformset_factory, ModelForm
 from .mixins import BaseMixin
-from authentication.addintionaly.funcs import getErrorMessageString
-from .addintionaly.funcs import getPriceByDiscount 
+from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString
 from django.db.models import Q
 
 class Index(FormView, BaseMixin):
@@ -95,10 +94,9 @@ def cartView(request : HttpRequest) -> HttpResponse:
         'categories' : Category.objects.filter(is_active = True),
         'cartSize'   : request.user.cartListUser.all().count() if request.user.is_authenticated else len(request.session.get('cart_pk_list', {}))
     }
-
     if request.user.is_authenticated:
  
-        products = request.user.cartListUser.all() 
+        products = request.user.cartListUser.select_related('product').all()    #https://django.fun/tutorials/select_related-i-prefetch_related-v-django/
         CartFormSet = modelformset_factory( 
                                             model = Cart, fields  = ('qty', ), 
                                             extra = 0,    formset = forms.MyFormSet, 
@@ -111,21 +109,26 @@ def cartView(request : HttpRequest) -> HttpResponse:
             form = CartFormSet(data = d)
             if form.is_valid(): 
                 ordering , _ = Ordering.objects.get_or_create( user = request.user )
+                TempOrdering.objects.filter(main_ordering = ordering).delete()
+                total_price = 0
+                tempOrderingList = list()
                 for i in form.cleaned_data:
-                    qrst = TempOrdering.objects.filter( main_ordering = ordering.pk, product = i['id'].product ) 
-                    if qrst :
-                        qrst.delete()
-                    TempOrdering.objects.create( 
+                    cur_price = getPriceByDiscount(i['id'].product)
+                    tempOrderingList.append(TempOrdering(
                         product       = i['id'].product,
                         qty           = i['qty'],
-                        current_price = getPriceByDiscount(i['id'].product),
+                        current_price = cur_price,
                         main_ordering = ordering,
-                    )
+                    ))
+                    total_price += cur_price * i['qty']
+                TempOrdering.objects.bulk_create(tempOrderingList)
+                ordering.total_price = total_price
+                ordering.save(update_fields = ('total_price',))
                 return redirect('shop:create_ordering')   
         else:
             form = CartFormSet( queryset = products )
             context['products'] =  zip(form, products)
-            context['totalPrice'] = sum( getPriceByDiscount(x.product) * x.qty for x in products )
+            context['totalPrice'] = sum( getPriceByDiscount(x.product) * x.qty for x in products ) 
     data = request.session.get('cart_pk_list', {})
     if data and not request.user.is_authenticated:
         productArr = [ Product.objects.get(pk = x) for x in data ]
@@ -145,17 +148,21 @@ def clearCart(request : HttpRequest) -> HttpResponse:
     messages.success(request, 'Ви успішно очистили кошик!')
     return redirect('shop:index')
 
-class CreateOrdering(FormView):
+class CreateOrdering(FormView, DetailView, BaseMixin):
     template_name = 'shop/create_ordering.html'
     form_class = forms.OrderingForm
-    success_url = reverse_lazy('shop:create_ordering')
+    success_url = reverse_lazy('shop:index')
+    context_object_name = 'ordering'
 
     def form_invalid(self, form: ModelForm) -> HttpResponse:
         messages.error(self.request, getErrorMessageString(form))
         return super().form_invalid(form)
 
+    def get_object(self, queryset = None):
+        return self.request.user.get_user.last()
+
     def form_valid(self, form: ModelForm) -> HttpResponse:
-        ordering = self.request.user.get_user.last()
+        ordering = self.get_object()
         ordering.first_name = form.cleaned_data['first_name']
         ordering.last_name = form.cleaned_data['last_name']
         ordering.city = form.cleaned_data['city']
@@ -165,3 +172,19 @@ class CreateOrdering(FormView):
         messages.success(self.request, 'Ви успішно подали заявку на замовлення!')
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs) -> dict:
+        context =  super().get_context_data(**kwargs)
+        context['tempOrderings'] = TempOrdering.objects.filter(main_ordering = self.get_object())
+        return context
+
+    def get_form_kwargs(self) -> dict:
+        context = super().get_form_kwargs()
+        ordering = self.get_object()
+        context['initial'] = {
+            'city' : ordering.city,
+            'first_name' : ordering.first_name,
+            'last_name' : ordering.last_name,
+            'post_office' : ordering.post_office,
+            'payment' : ordering.payment
+        }
+        return context

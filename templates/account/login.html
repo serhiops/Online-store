@@ -1,0 +1,33 @@
+{% extends 'authentication/base_authentication.html' %}   
+{% load i18n %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block authenticationForm %}
+<form method="POST" action="{% url 'account_login' %}" class="contact_form">
+  {{ form.none_field.errors }}
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-xl-6">
+      <label for="{{ form.login.id_for_label }}">Email</label>
+      {{ form.login }}
+      <div class="invalid-feedback">
+                {{ form.login.errors }}
+            </div>
+        </div>
+        <div class="col-xl-6 last_name_col">
+          <label for="{{ form.password.id_for_label }}">Password</label>
+          {{ form.password }}
+          <div class="invalid-feedback">
+              {{ form.password.errors }}
+          </div>
+      </div>
+    </div>
+    <button type="submit" class="button contact_button"><span>{% trans "Sign In" %}</span></button>
+</form>
+<a href="{% url 'account_reset_password' %}">Забув пароль?</a>
+<br>
+<a href="{% provider_login_url 'google' %}">Ввійти з допомогою Google</a>
+
+{% endblock authenticationForm %} 

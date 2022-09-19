@@ -1,0 +1,42 @@
+{% extends "authentication/base_authentication.html" %}
+{% load socialaccount %}
+{% load i18n %}  
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block authenticationForm %}
+
+<form class="contact_form" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {{ form.none_field.errors }}
+  {% csrf_token %}
+<div class="row">
+    <div class="col-xl-12"> 
+      <label for="{{ form.email.id_for_label }}">Пошта</label>
+      {{ form.email }}
+      <div class="invalid-feedback">
+        {{ form.email.errors }}
+      </div>
+    </div>
+    <div class="col-xl-6 last_name_col">
+      <label for="{{ form.password1.id_for_label }}">Пароль</label>
+      {{ form.password1 }}
+      <div class="invalid-feedback">
+        {{ form.password1.errors }}
+      </div>
+    </div>
+    <div class="col-xl-6 last_name_col">
+      <label for="{{ form.password2.id_for_label }}">Повторіть свій пароль</label>
+      {{ form.password2 }}
+      <div class="invalid-feedback">
+        {{ form.password2.errors }}
+      </div>
+    </div>
+  </div>
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit" class="button contact_button"><span>Зареєструватися</span></button>
+</form>
+<a href="{% provider_login_url 'google' %}">Зареєструватися з допомогою Google</a>
+
+{% endblock authenticationForm %} 
