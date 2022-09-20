@@ -43,7 +43,7 @@ class OrderingForm(forms.ModelForm):
     #}))
     class Meta:
         model = Ordering
-        fields = ('first_name', 'last_name', 'city', 'post_office', 'payment')
+        fields = ('first_name', 'last_name', 'city', 'post_office', 'payment', 'number_of_phone')
 
         widgets = {
             'first_name' : forms.TextInput(attrs={
@@ -72,7 +72,10 @@ class OrderingForm(forms.ModelForm):
             }),
             'payment' : forms.RadioSelect(attrs={
                 'class' : 'form-control black-color',
-                })
+            }),
+            'number_of_phone' : forms.TextInput(attrs={
+                'class' : 'form-control black-color',
+            })
         }
 
 class SearchForm(forms.Form):

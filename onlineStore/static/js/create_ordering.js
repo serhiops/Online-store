@@ -1,20 +1,6 @@
-const  KEY = '8ce1b1742686b544f5c622b7532b49d5'
-const URL_POST = 'https://api.novaposhta.ua/v2.0/json/';
+let  KEY = '8ce1b1742686b544f5c622b7532b49d5'
+let URL_POST = 'https://api.novaposhta.ua/v2.0/json/';
 
-const getCookie = name => {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        let cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            } 
-        }
-    }
-    return cookieValue;
-}
 $('#checkout_city').on('input', ()=>{
     let text = $('#checkout_city').val();
     if (text.length > 2){

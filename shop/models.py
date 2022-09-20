@@ -5,10 +5,11 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .addintionaly.user_manager import UserManager
 from django.contrib.auth.models import PermissionsMixin
+from django.core.mail import send_mail
+from config import config
 
 class CustomUser(AbstractUser,PermissionsMixin):
     username = None
-    number_of_phone = models.CharField(max_length=15, verbose_name='number of phone', blank=True)
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField('first name', max_length=30, blank=True)
     last_name = models.CharField('last name', max_length=30, blank=True)
@@ -19,7 +20,7 @@ class CustomUser(AbstractUser,PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ()
+    REQUIRED_FIELDS = tuple()
 
     def get_full_name(self):
         full_name = '%s %s' % (self.first_name, self.last_name)
@@ -47,10 +48,6 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse("shop:by_category", kwargs={"categorySlug": self.slug})
-
-    def save(self, *args, **kwargs) -> None:
-        print('Save')
-        return super().save(*args, **kwargs)
     
 class Review(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="get_author", verbose_name="author")
@@ -69,6 +66,9 @@ class Review(models.Model):
 class Photo(models.Model):
    image = models.ImageField(upload_to="images/products/%Y/%m/%d", verbose_name="image")
    product = models.ForeignKey("Product",on_delete=models.CASCADE, related_name='photos')
+
+class MailingList(models.Model):
+    email = models.EmailField(unique=True)
 
 class Product(models.Model):
     name = models.CharField(max_length=64, verbose_name="name")
@@ -91,6 +91,15 @@ class Product(models.Model):
     
     def __str__(self) -> str:
         return self.name
+
+    def save(self, *args, **kwargs) -> None:
+        send_mail(
+            'Повідомлення від інтернет-магазину.',
+            'На сайті з\'явився новий товар в категорії "%s" : %s.' % (self.category.name, self.name),
+            config.GOOGLE_EMAIL_HOST_USER,
+            *MailingList.objects.values_list('email')
+        )
+        return super().save(*args, **kwargs)
 
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="cartListProduct", verbose_name="product")
@@ -135,14 +144,13 @@ class Ordering(models.Model):
     first_name = models.CharField(max_length=32, blank = True)
     last_name = models.CharField(max_length=32, blank = True)
     city = models.CharField(max_length=50, blank = True)
+    number_of_phone = models.CharField(max_length=15, verbose_name='number of phone', blank=True)
     post_office = models.CharField(max_length=64, blank = True)
     created = models.DateTimeField(auto_now_add=True, verbose_name="created")
     payment = models.CharField(default=DIRECT_BANK_TRANSFER, choices=TYPE_OF_PAYMENT, max_length=3, blank = True)
     is_done = models.BooleanField(default=False, verbose_name='is done')
-    total_price = MoneyField(max_digits=14, decimal_places=2, default_currency='UAH', verbose_name="price")  
+    total_price = MoneyField(max_digits=14, decimal_places=2, default_currency='UAH', verbose_name="price", blank = True, null=True)  #del
 
-class MailingList(models.Model):
-    email = models.EmailField(unique=True)
 
 User = get_user_model()
 

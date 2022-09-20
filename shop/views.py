@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse
-from .models import Category, Product, Cart, TempOrdering, Ordering
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from .models import Category, Product, Cart, TempOrdering, Ordering, MailingList
 from django.views.generic import ListView, DetailView, FormView
 from . import forms
 from django.urls import reverse_lazy
@@ -18,6 +18,7 @@ class Index(FormView, BaseMixin):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
+        #del self.request.session['isInMailingList']
         context['products'] = Product.objects.filter(is_active = True)[:8]
         context['serchMenu'] = True
         return context
@@ -168,6 +169,7 @@ class CreateOrdering(FormView, DetailView, BaseMixin):
         ordering.city = form.cleaned_data['city']
         ordering.post_office = form.cleaned_data['post_office']
         ordering.payment = form.cleaned_data['payment']
+        ordering.number_of_phone = form.cleaned_data['number_of_phone']
         ordering.save()
         messages.success(self.request, 'Ви успішно подали заявку на замовлення!')
         return super().form_valid(form)
@@ -188,3 +190,12 @@ class CreateOrdering(FormView, DetailView, BaseMixin):
             'payment' : ordering.payment
         }
         return context
+
+def addToMailingList(request : HttpRequest) -> JsonResponse:
+    mail, create = MailingList.objects.get_or_create(email = request.POST.get('mail', ''))
+    request.session['isInMailingList'] = create
+    data = {
+        'text' : 'Дякую, що підписалися на нашу розсилку!' if create else 'Ця пошта вже підписана на нашу розсилку!',
+        'create' : create,
+    } 
+    return JsonResponse(data)

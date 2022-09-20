@@ -51,7 +51,7 @@
                             <div class="row">
                                 <div class="col-xl-6">
                                     <!-- Name -->
-                                    <label for="{{ form.first_name.id_for_label }}">First Name*</label>
+                                    <label for="{{ form.first_name.id_for_label }}">Ім'я*</label>
                                     {{ form.first_name }}
                                     <div class="invalid-feedback">
                                         {{ form.first_name.errors }}
@@ -59,16 +59,24 @@
                                 </div>
                                 <div class="col-xl-6 last_name_col">
                                     <!-- Last Name -->
-                                    <label for="{{ form.last_name.id_for_label }}">Last Name*</label>
+                                    <label for="{{ form.last_name.id_for_label }}">Прізвисько*</label>
                                     {{ form.last_name }}
                                     <div class="invalid-feedback">
                                         {{ form.last_name.errors }}
                                     </div>
                                 </div>
                             </div>
+                            <div >
+                                    
+                                <label for="{{ form.number_of_phone.id_for_label }}">Номер телефону*</label>
+                                {{ form.number_of_phone }}
+                                <div class="invalid-feedback">
+                                    {{ form.number_of_phone.errors }}
+                                </div>
+                            </div>
 
                             <div>
-                                <label for="{{ form.city.id_for_label }}">City*</label>
+                                <label for="{{ form.city.id_for_label }}">Населенй пункт*</label>
                                 {{ form.city }}
                                 <div class="invalid-feedback">
                                     {{ form.city.errors }}
@@ -80,7 +88,7 @@
                             </div>
 
                             <div>
-                                <label for="{{ form.post_office.id_for_label }}">Post Office*</label>
+                                <label for="{{ form.post_office.id_for_label }}">Поштове відділення*</label>
                                 {{ form.post_office }}
                                 <div class="invalid-feedback">
                                     {{ form.post_office.errors }}
@@ -113,7 +121,7 @@
                         <div class="order_list_bar d-flex flex-row align-items-center justify-content-start">
                             <div class="order_list_title"><a href="{{ ordering.product.get_absolute_url }}">{{ ordering.product.name|truncatechars:15 }}</a></div>
                             <div class="order_list_value ml-auto">{{ ordering.qty }}</div>
-                            <div class="order_list_value ml-auto">{{ ordering.current_price.currency }} {{ ordering|getPriceByQty|intcomma }}</div>
+                            <div class="order_list_value ml-auto">{{ ordering.current_price.currency }} {{ ordering|getPriceByQty|intcomma }}</div> 
                         </div>
                         {% endfor %}
                         <hr/>

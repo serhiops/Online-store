@@ -5,6 +5,7 @@
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
 {% block authenticationForm %}
+
 <form method="POST" action="{% url 'account_login' %}" class="contact_form">
   {{ form.none_field.errors }}
   {% csrf_token %}

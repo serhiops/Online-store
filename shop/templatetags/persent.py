@@ -19,6 +19,6 @@ def getTotalPrice(value : models.Model, arg : int):
 
 @register.filter(name = 'getPriceByQty')
 def getPriceByQty(value : models.Model):
-    return value.product.price.amount if value.qty == 1 else  value.product.price.amount * value.qty
+    return (value.product.price.amount - (value.product.price.amount * value.product.discount / 100)) * value.qty
 
 

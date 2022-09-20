@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 
 from authentication.forms import CustomUserChangeForm, SignupForm
 
-from .models import CustomUser, Category, Review, Product, Cart, Ip, TempOrdering, Photo, Ordering
+from .models import CustomUser, Category, Review, Product, Cart, Ip, TempOrdering, Photo, Ordering, MailingList
 
 class CustomUserAdmin(UserAdmin):
     add_form = SignupForm
@@ -70,10 +70,15 @@ class OrderingAdmin(admin.ModelAdmin):
     list_display = ('user', 'first_name', 'last_name')
     list_display_links = ('user', 'first_name', 'last_name')
 
+class MailingListAdmin(admin.ModelAdmin):
+    list_display = ('email', )
+    list_display_links = ('email',)
+
 admin.site.register(Photo, PhotoAdmin)
 admin.site.register(TempOrdering, TempOrderingAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Ordering, OrderingAdmin)
+admin.site.register(MailingList, MailingListAdmin)
 
 admin.site.register(Ip, IpAdmin)
 admin.site.register(Cart, CartAdmin)

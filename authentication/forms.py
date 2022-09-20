@@ -15,7 +15,7 @@ class LoginForm(AllauthLoginForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['login'].widget = forms.EmailInput(attrs={
-            'class' : 'contact_input ',
+            'class' : 'contact_input',
         })
         self.fields['password'].widget = forms.PasswordInput(attrs={
             'class' : 'contact_input',
@@ -27,12 +27,15 @@ class SignupForm(AllauthSignupForm):
         super().__init__(*args, **kwargs)
         self.fields['password1'].widget = forms.PasswordInput(attrs={
             'class':'form-control',
+            'style' : 'color:black',
         })
         self.fields['password2'].widget = forms.PasswordInput(attrs={
             'class':'form-control',
+            'style' : 'color:black',
         })
         self.fields['email'].widget = forms.EmailInput(attrs={
             'class':'form-control',
+            'style' : 'color:black',
         })
 
 class SocialAccountSignupForm(AllauthSocialAccountSignupForm):

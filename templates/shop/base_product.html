@@ -13,9 +13,13 @@
 
 
 <div class="home">
+    {% if serchPage %}
     <div class="alert alert-{{ messageType }}" role="alert">
         {{ messageText }}
-      </div>
+    </div>
+    {% else %}
+        {% include '_inc/_alerts.html' %}
+    {% endif %}
     <div class="home_container">
         {% if not serchPage %}
         <div class="home_background" style="background-image:url({{ currentCategory.image.url }})"></div>
@@ -38,8 +42,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="home_content">
-                            <div class="home_title">Пошук<span>.</span></div>
-                            <div class="home_text"><p>{{ serchText }}</p></div>
+                            <div class="home_title">{{ serchText }}</div>
                         </div>
                     </div>
                 </div>
@@ -59,6 +62,5 @@
 
 <script src="{% static 'js/categories.js' %}"></script>
 <script src="{% static 'js/product.js'%}"></script>
-<script src="{% static 'js/newsletter.js'%}"></script>
 
 {% endblock loadJS %}
