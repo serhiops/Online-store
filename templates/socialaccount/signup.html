@@ -1,5 +1,7 @@
 {% extends 'authentication/base_authentication.html' %}  
 
+{% load i18n %}
+
 {% block authenticationForm %} 
 {% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to
 {{site_name}}. As a final step, please complete the following form:{% endblocktrans %}

@@ -9,6 +9,8 @@ from django.forms import Form, modelformset_factory, ModelForm
 from .mixins import BaseMixin
 from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString
 from django.db.models import Q
+from django.core.mail import send_mail
+from config.config import GOOGLE_EMAIL_HOST_USER
 
 class Index(FormView, BaseMixin):
     template_name = 'shop/index.html'
@@ -71,16 +73,15 @@ class DetailProduct(DetailView, FormView, BaseMixin):
 
     def form_valid(self, form : Form) -> HttpResponse:
         product = self.get_object()
-        cart_pk_list = self.request.session.get('cart_pk_list', {})
-        if cart_pk_list.get(str(product.pk), False):
-            del cart_pk_list[str(product.pk)]
-        cart_pk_list[product.pk] = form.cleaned_data.get('qty', 0)
-        self.request.session['cart_pk_list'] = cart_pk_list
         if self.request.user.is_authenticated:
-            cart = Cart.objects.filter(product = product, user = self.request.user)
-            if cart:
-                cart.delete()
+            Cart.objects.filter(product = product, user = self.request.user).delete()
             Cart.objects.create(product = product, user = self.request.user, qty = form.cleaned_data.get('qty', 1))
+        else:
+            cart_pk_list = self.request.session.get('cart_pk_list', {})
+            if cart_pk_list.get(product.pk, False):
+                del cart_pk_list[product.pk]
+            cart_pk_list[product.pk] = form.cleaned_data.get('qty', 0)
+            self.request.session['cart_pk_list'] = cart_pk_list
         messages.success(self.request, 'Ви успішно додали товар до кошика!')
         return super().form_valid(form)
 
@@ -132,11 +133,9 @@ def cartView(request : HttpRequest) -> HttpResponse:
             context['totalPrice'] = sum( getPriceByDiscount(x.product) * x.qty for x in products ) 
     data = request.session.get('cart_pk_list', {})
     if data and not request.user.is_authenticated:
-        productArr = [ Product.objects.get(pk = x) for x in data ]
-        qtyArr = [ data[x] for x in data ]
-
-        context['products'] = zip(productArr, qtyArr)
-        context['totalPrice'] = sum( getPriceByDiscount(product) * qty for product, qty in zip(productArr, qtyArr) )
+        productQty = { Product.objects.get(pk = x[0]) : x[1] for x in data.items() }.items()
+        context['products'] = productQty
+        context['totalPrice'] = sum( getPriceByDiscount(product) * qty for product, qty in productQty )
 
     
     return render( request, 'shop/cart.html', context)
@@ -199,3 +198,19 @@ def addToMailingList(request : HttpRequest) -> JsonResponse:
         'create' : create,
     } 
     return JsonResponse(data)
+
+
+class Contact(FormView):
+    template_name = 'shop/contact.html'
+    form_class = forms.ContactForm
+    success_url = reverse_lazy('shop:index')
+
+    def form_valid(self, form) -> HttpResponse:
+        send_mail(
+            subject = form.cleaned_data['subject'],
+            message = "Повідомлення від користувача сайту : %s" % form.cleaned_data['message'],
+            from_email = None,
+            recipient_list = (GOOGLE_EMAIL_HOST_USER,)
+        )
+        messages.success(self.request, 'Дякую за повідомлення!')
+        return super().form_valid(form)

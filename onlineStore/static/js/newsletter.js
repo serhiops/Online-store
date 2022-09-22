@@ -10,9 +10,10 @@ $(document).ready(()=>{
     $('#newsletter_form').submit((e)=>{
         e.preventDefault();
         let text = $('#newsletter_input').val();
+        console.log($('#newsletter_form').attr('action'))
         if(ValidateEmail(text)){
             $.ajax({
-                url : 'add_to_mailing_list/',
+                url : $('#newsletter_form').attr('action'),
                 type : 'POST',
                 data : {
                     'csrfmiddlewaretoken' : getCookie('csrftoken'),
@@ -36,5 +37,5 @@ $(document).ready(()=>{
             document.getElementById('newsletter_input').value = '';
         }
         window.scrollTo(0, 0);
-    }) 
+    })  
 })

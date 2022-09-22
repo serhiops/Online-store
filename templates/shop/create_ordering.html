@@ -41,11 +41,11 @@
             <!-- Billing Info -->
             <div class="col-lg-6">
                 <div class="billing checkout_section">
-                    <div class="section_title">Billing Address</div>
-                    <div class="section_subtitle">Enter your address info</div>
+                    <div class="section_title">Платіжна адреса</div>
+                    <div class="section_subtitle">Введіть свою адресу</div>
                     <div class="checkout_form_container">
                         
-                        <form action="#" id="checkout_form" class="checkout_form" method="post">
+                        <form id="checkout_form" class="checkout_form" method="post">
                             {{ form.none_field.errors }}
                             {% csrf_token %}
                             <div class="row">
@@ -107,15 +107,15 @@
 
             <div class="col-lg-6">
                 <div class="order checkout_section">
-                    <div class="section_title">Your order</div>
-                    <div class="section_subtitle">Order details</div>
+                    <div class="section_title">Ваші замовлення</div>
+                    <div class="section_subtitle">Деталі засовлення</div>
 
                     <!-- Order details -->
                     <div class="order_list_container">
                         <div class="order_list_bar d-flex flex-row align-items-center justify-content-start">
-                            <div class="order_list_title">Product</div>
-                            <div class="order_list_value ml-auto">Qty</div>
-                            <div class="order_list_value ml-auto">Total</div>
+                            <div class="order_list_title">Товар</div>
+                            <div class="order_list_value ml-auto">Кількість</div>
+                            <div class="order_list_value ml-auto">Всього</div>
                         </div>
                         {% for ordering in tempOrderings %}
                         <div class="order_list_bar d-flex flex-row align-items-center justify-content-start">
@@ -150,7 +150,7 @@
 
                         </div>    
                     </div>
-                    <button type="submit" class="newsletter_button trans_200"><span>Subscribe</span></button>
+                    <button type="submit" class="newsletter_button trans_200"><span>Відправити</span></button>
                 </form>
                 </div>
             </div>

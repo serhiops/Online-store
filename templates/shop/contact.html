@@ -1,0 +1,28 @@
+{% extends 'authentication/base_authentication.html' %}
+{% load static %}
+
+{% block authenticationForm %}
+ <form id="contact_form" class="contact_form" method="post">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-xl-12"> 
+      <label for="{{ form.subject.id_for_label }}">Subject*</label>
+      {{ form.subject }}
+      <div class="invalid-feedback">
+        {{ form.subject.errors }}
+      </div>
+    </div>
+
+    <div class="col-xl-12"> 
+        <label for="{{ form.message.id_for_label }}">Message*</label>
+        {{ form.message }}
+        <div class="invalid-feedback">
+          {{ form.message.errors }}
+        </div>
+      </div>
+    
+  </div>
+  <button type="submit" class="button contact_button"><span>Відправити</span></button>
+</form> 
+{% endblock authenticationForm %} 
+

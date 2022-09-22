@@ -12,7 +12,7 @@
     {% include '_inc/_alerts.html' %}
     {% if not user.is_authenticated %}
         <div class="alert alert-danger" role="alert">
-            Щоб створити замовлення вам потрібно <a href="{% url 'authentication:login' %}">авторизуватися на сайті</a>
+            Щоб створити замовлення вам потрібно <a href="{% url 'account_login' %}">авторизуватися на сайті</a>
         </div>
     {% endif %}
     <div class="home_container">
@@ -24,9 +24,9 @@
                         <div class="home_content">
                             <div class="breadcrumbs">
                                 <ul>
-                                    <li><a href="{% url 'shop:index' %}">Home</a></li>
-                                    <li><a href="#">Categories</a></li>
-                                    <li>Shopping Cart</li>
+                                    <li><a href="{% url 'shop:index' %}">Головна</a></li>
+                                    <li><a href="#">Категорії</a></li>
+                                    <li>Кошик</li>
                                 </ul>
                             </div>
                         </div>

@@ -6,7 +6,6 @@ from django.urls import reverse
 from .addintionaly.user_manager import UserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
-from config import config
 
 class CustomUser(AbstractUser,PermissionsMixin):
     username = None
@@ -96,7 +95,7 @@ class Product(models.Model):
         send_mail(
             'Повідомлення від інтернет-магазину.',
             'На сайті з\'явився новий товар в категорії "%s" : %s.' % (self.category.name, self.name),
-            config.GOOGLE_EMAIL_HOST_USER,
+            from_email = None,
             *MailingList.objects.values_list('email')
         )
         return super().save(*args, **kwargs)

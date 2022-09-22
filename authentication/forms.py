@@ -1,5 +1,5 @@
 from django import forms
-from shop.models import User
+from shop.models import User, Product, Cart
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from allauth.account.forms import (
@@ -20,6 +20,26 @@ class LoginForm(AllauthLoginForm):
         self.fields['password'].widget = forms.PasswordInput(attrs={
             'class' : 'contact_input',
         })
+
+    def login(self, *args, **kwargs):
+        """ Якщо у сесії незареєстрованого користувача є товари в клшику, тоді додаємо їх до бази данних """
+        ret =  super().login(*args, **kwargs)
+        data : dict = self.request.session.get('cart_pk_list', {})
+        if data:
+            products = Product.objects.filter(pk__in = data.keys())
+            Cart.objects.filter(product__in = Product.objects.filter(pk__in = data.keys()),
+                                user = self.request.user).delete()
+            
+            cartList = list()
+            for product_id, qty in data.items():
+                cartList.append(Cart(
+                    user = self.request.user,
+                    product = products.get(pk = product_id),
+                    qty = qty
+                ))
+            Cart.objects.bulk_create(cartList)
+
+        return ret
 
 class SignupForm(AllauthSignupForm):
 

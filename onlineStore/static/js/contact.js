@@ -15,7 +15,6 @@
 
 $(document).ready(function()
 {
-	"use strict";
 
 	/* 
 
@@ -28,28 +27,7 @@ $(document).ready(function()
 	let menuActive = false;
 	let map;
 
-	setHeader();
-
-	$(window).on('resize', () =>
-	{
-		setHeader();
-	});
-
-	$(document).on('scroll', () =>
-	{
-		setHeader();
-	});
-
-	initSearch();
-	initMenu();
-
-	/* 
-
-	2. Set Header
-
-	*/
-
-	setHeader = () =>
+	const setHeader = () =>
 	{
 		if($(window).scrollTop() > 100)
 		{
@@ -61,13 +39,18 @@ $(document).ready(function()
 		}
 	}
 
-	/* 
+	$(window).on('resize', () =>
+	{
+		setHeader();
+	});
 
-	3. Init Search
+	$(document).on('scroll', () =>
+	{
+		setHeader();
+	});
 
-	*/
 
-	initSearch = () =>
+	const initSearch = () =>
 	{
 		if($('.search').length && $('.search_panel').length)
 		{
@@ -87,7 +70,7 @@ $(document).ready(function()
 
 	*/
 
-	initMenu = () =>
+	const initMenu = () =>
 	{
 		if($('.hamburger').length)
 		{

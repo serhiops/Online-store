@@ -10,7 +10,6 @@
                                 <li class="hassubs active">
                                     <a href="{% url 'shop:index' %}">Home</a>
                                     <ul>
-                                        <li><a href="#">Мій акаунт</a></li>
                                         <li><a href="product.html">Product</a></li>
                                         <li><a href="cart.html">Cart</a></li>
                                         <li><a href="checkout.html">Check out</a></li>
@@ -25,7 +24,7 @@
                                         {% endfor %}
                                     </ul>
                                 </li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="{% url 'shop:contact' %}">Contact</a></li>
                                 {% if not user.is_authenticated %}
                                 <li><a href="{% url 'account_login' %}">Авторизуватися</a></li>
                                 <li><a href="{% url 'account_signup' %}">Зареєструватися</a></li>

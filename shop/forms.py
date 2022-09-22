@@ -6,7 +6,7 @@ class AddToCartForm(forms.Form):
     qty = forms.CharField(widget = forms.TextInput(attrs={
         'id':'quantity_input',
         'type':'text',
-        'pattern':'[0-9]',
+        'pattern':'[1-9]',
         'value':'1',
     }))
 
@@ -87,16 +87,15 @@ class SearchForm(forms.Form):
         'required' : 'required',
     }))
 
-class NewsletterForm(forms.ModelForm):
-    
-    class Meta:
-        model = MailingList
-        fields = ('email',)
-        widgets = {
-            'email' : forms.EmailInput(attrs={
-                'class' : 'newsletter_input',
-                'type' : 'email',
-                'required' : 'required',
-            })
-        }
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=64, widget=forms.TextInput(attrs={
+        'class':'form-control',
+        'style' : 'color:black',
+        'required' : 'required',
+    }))
+    message = forms.CharField(widget=forms.Textarea(attrs={
+        'class':'form-control',
+        'style' : 'color:black',
+        'required' : 'required',
+    }))
     
