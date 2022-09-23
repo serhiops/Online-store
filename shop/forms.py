@@ -1,6 +1,5 @@
 from django import forms
-from .models import Cart, Ordering, MailingList
-
+from .models import Cart, Ordering, Review
 
 class AddToCartForm(forms.Form):
     qty = forms.CharField(widget = forms.TextInput(attrs={
@@ -98,4 +97,3 @@ class ContactForm(forms.Form):
         'style' : 'color:black',
         'required' : 'required',
     }))
-    

@@ -60,7 +60,7 @@ class Review(models.Model):
         ordering = ('-created',)
 
     def __str__(self) -> str:
-        return self.author.username
+        return '%s : "%s"' % (self.author.email, self.text)
 
 class Photo(models.Model):
    image = models.ImageField(upload_to="images/products/%Y/%m/%d", verbose_name="image")
@@ -81,12 +81,15 @@ class Product(models.Model):
     views = models.ManyToManyField("Ip", related_name="post_views", blank=True)
     discount = models.PositiveIntegerField(default=0, verbose_name='sale')
     in_stock = models.BooleanField(default=True, verbose_name='in stock')
-    
+     
     class Meta:
         ordering = ("-created",)
 
     def get_absolute_url(self) -> str:
         return reverse('shop:detail_product', kwargs={'productSlug': self.slug, 'categorySlug':self.category.slug})
+
+    def get_absolute_review_url(self) -> str:
+        return reverse('shop:reviews', kwargs={'productSlug': self.slug, 'categorySlug':self.category.slug})
     
     def __str__(self) -> str:
         return self.name
@@ -99,6 +102,9 @@ class Product(models.Model):
             *MailingList.objects.values_list('email')
         )
         return super().save(*args, **kwargs)
+
+    def getTotalViews(self):
+        return self.views.count()
 
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="cartListProduct", verbose_name="product")

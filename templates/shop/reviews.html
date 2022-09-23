@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block loadCSS %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/cart.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/cart_responsive.css' %}">
+{% endblock loadCSS  %}
+
+{% block content %}
+
+<div class="home">
+    {% include '_inc/_alerts.html' %}
+    <div class="home_container">
+        <div class="home_background" style="background-image:url({% static 'images/cart.jpg' %})"></div>
+        <div class="home_content_container">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="home_content">
+                            <div class="breadcrumbs">
+                                <ul>
+                                    <li><a href="{% url 'shop:index' %}">Головна</a></li>
+                                    <li><a href="#">Категорії</a></li>
+                                    <li>Кошик</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cart_info">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form mehod="post" id="comentForm" acttion="{% url 'shop:add_review' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="comentTextarea">Впишіть ваш коментар</label>
+                        <textarea class="form-control" style="color:black;" id="comentTextarea" rows="3"></textarea>
+                        <input type="hidden" value="{{ productId }}" id="productId">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Відправити</button>
+                </form>
+                <div id="comentList">
+                    {% for review in reviews %}
+                        <div class="card reviews-cart" {% if review.author == user %} id="authorsCard" {% endif %}>
+                            <div class="card-header">
+                                <div style="float:left">
+                                {{ review.updated }} {% if review.updated != review.created %} <em>змінено</em> {% endif %}
+                                </div>
+                                {% if review.author == user %}
+                                <div style="float:right" class="btn-group" id="buttonGroup">
+                                    <button type="button" class="btn btn-success" onclick="changeButton()" id="changeButton">Редагувати</button>
+                                    <button type="button" class="btn btn-danger" onclick="deleteButton()" id="deleteButton">Видалити</button>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <blockquote class="blockquote mb-0" {% if review.author == user %} id="authorsBlock" {% endif %}>
+                                    <p>{{ review.text }}</p>
+                                </blockquote>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block loadJS %}
+    <script src="{% static 'js/cart.js'%}"></script>
+    <script src="{% static 'js/reviews.js'%}"></script>
+{% endblock loadJS %}

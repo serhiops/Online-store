@@ -7,3 +7,12 @@ a.disabled {
 .black-color{
     color : black;
 }
+
+.reviews-text{
+    font-weight: bold;
+    font-size: 18px;
+}
+.reviews-cart{
+    margin-top: 1%;
+    margin-bottom: 1%;
+}

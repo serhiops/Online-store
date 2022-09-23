@@ -1,16 +1,18 @@
+import re
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from .models import Category, Product, Cart, TempOrdering, Ordering, MailingList
-from django.views.generic import ListView, DetailView, FormView
+from .models import Category, Product, Cart, TempOrdering, Ordering, MailingList, Ip, Review
+from django.views.generic import ListView, DetailView, FormView, View
 from . import forms
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.forms import Form, modelformset_factory, ModelForm
 from .mixins import BaseMixin
-from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString
+from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString, get_client_ip
 from django.db.models import Q
 from django.core.mail import send_mail
 from config.config import GOOGLE_EMAIL_HOST_USER
+
 
 class Index(FormView, BaseMixin):
     template_name = 'shop/index.html'
@@ -89,6 +91,14 @@ class DetailProduct(DetailView, FormView, BaseMixin):
         messages.error(self.request, form.errors.as_text())
         return super().form_invalid(form)
 
+    def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+        ip = get_client_ip(request)
+        if Ip.objects.filter(ip = ip).exists():
+            self.get_object().views.add(Ip.objects.get(ip = ip))
+        else:
+            self.get_object().views.add(Ip.objects.create(ip = ip))
+        return super().get(request, *args, **kwargs)
+
 def cartView(request : HttpRequest) -> HttpResponse:
     products = list()
     context = dict()
@@ -133,10 +143,9 @@ def cartView(request : HttpRequest) -> HttpResponse:
             context['totalPrice'] = sum( getPriceByDiscount(x.product) * x.qty for x in products ) 
     data = request.session.get('cart_pk_list', {})
     if data and not request.user.is_authenticated:
-        productQty = { Product.objects.get(pk = x[0]) : x[1] for x in data.items() }.items()
+        productQty = tuple( ( Product.objects.get(pk = x[0]) , x[1] ) for x in data.items() )
         context['products'] = productQty
         context['totalPrice'] = sum( getPriceByDiscount(product) * qty for product, qty in productQty )
-
     
     return render( request, 'shop/cart.html', context)
 
@@ -190,17 +199,7 @@ class CreateOrdering(FormView, DetailView, BaseMixin):
         }
         return context
 
-def addToMailingList(request : HttpRequest) -> JsonResponse:
-    mail, create = MailingList.objects.get_or_create(email = request.POST.get('mail', ''))
-    request.session['isInMailingList'] = create
-    data = {
-        'text' : 'Дякую, що підписалися на нашу розсилку!' if create else 'Ця пошта вже підписана на нашу розсилку!',
-        'create' : create,
-    } 
-    return JsonResponse(data)
-
-
-class Contact(FormView):
+class Contact(FormView, BaseMixin):
     template_name = 'shop/contact.html'
     form_class = forms.ContactForm
     success_url = reverse_lazy('shop:index')
@@ -214,3 +213,16 @@ class Contact(FormView):
         )
         messages.success(self.request, 'Дякую за повідомлення!')
         return super().form_valid(form)
+
+class Reviews(ListView, BaseMixin):
+    template_name = 'shop/reviews.html'
+    context_object_name = 'reviews'
+
+    def get_queryset(self):
+        return Review.objects.filter( product__slug = self.kwargs['productSlug'], is_active = True )
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+        context['productId'] = Product.objects.get( slug = self.kwargs['productSlug'] ).pk
+        return context

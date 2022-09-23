@@ -15,7 +15,8 @@
                     <div class="newsletter_form_container">
                         <form id="newsletter_form" class="newsletter_form" action="{% url 'shop:add_to_mailing_list' %}">
                             {% csrf_token %}
-                            <input type="email" class="newsletter_input" required="required" id="newsletter_input">
+                            <input type="email" class="newsletter_input" required="required" id="newsletter_input" 
+                            {% if user.is_authenticated %}value="{{ user.email }}"{% endif %}>
                             <button class="newsletter_button trans_200" id="newsletter_button"><span>Subscribe</span></button>
                         </form>
                     </div>
