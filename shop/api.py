@@ -3,6 +3,7 @@ from .models import Review, Product, MailingList
 from django.views.generic import View
 from django.core import serializers
 import json
+from .addintionaly.decorators import errorJsonResponse
 
 class ReviewApi(View):
 
@@ -15,6 +16,7 @@ class ReviewApi(View):
         if type == 'DELETE':
             return self.delete()
 
+    @errorJsonResponse
     def create(self) -> JsonResponse:
         review, create = Review.objects.get_or_create(author = self.request.user, 
                                                     product = Product.objects.get(pk = self.request.POST['productId']))
@@ -29,6 +31,7 @@ class ReviewApi(View):
             }
         return JsonResponse(data)
 
+    @errorJsonResponse
     def get(self, request : HttpRequest, *qrgs, **kwargs) -> JsonResponse:
         review = Review.objects.get(author = request.user, 
                                             product = request.GET['productId'])
@@ -37,20 +40,16 @@ class ReviewApi(View):
         data = json.dumps(struct[0], ensure_ascii = False)
         return JsonResponse({ 'success' : True, 'review' : data,  })
     
-    def update(self) -> JsonResponse:
-        try:
-            review = Review.objects.get(author = self.request.user, product = self.request.POST['productId'])
-            review.text = self.request.POST['text']
-            review.save(update_fields = ('text',))
-        except Exception as _ex:
-            return JsonResponse({ 'sucess' : False, })
+    @errorJsonResponse
+    def update(self) -> JsonResponse:        
+        review = Review.objects.get(author = self.request.user, product = self.request.POST['productId'])
+        review.text = self.request.POST['text']
+        review.save(update_fields = ('text',))
         return JsonResponse({ 'sucess' : True })
 
+    @errorJsonResponse
     def delete(self) -> JsonResponse:
-        try:
-            Review.objects.get(author = self.request.user, product = self.request.POST['productId']).delete()
-        except Exception as _ex:
-            return JsonResponse({'success' : False, })
+        Review.objects.get(author = self.request.user, product = self.request.POST['productId']).delete()
         return JsonResponse({'success' : True})
 
 def addToMailingList(request : HttpRequest) -> JsonResponse:

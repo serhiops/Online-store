@@ -13,7 +13,6 @@ $(document).ready(()=>{
                 'type' : 'CREATE'
             },
             success : data =>{
-                console.log(data);
                 $('#comentTextarea').val('')
                 if (data.created && data.success){
                     $('#comentList').prepend(
@@ -32,10 +31,17 @@ $(document).ready(()=>{
                         </div>
                     </div>`
                     );
-                    console.log('asddas');
+                } 
+                else if( !data.success ){
+                    raiseAlert(data.message, 'danger')
+                }
+                else if ( !data.created ){
+                    raiseAlert(data.message, 'warning')
                 }
             },
-            error : error =>{ console.log(error); }
+            error : error =>{
+                raiseAlert('Виникла помилка! Ви можете повідомити про це адміністратора.', 'danger');
+            }
         });
     });
 })
@@ -129,3 +135,8 @@ const resetButton = ()=>{
     deleteButton.text('Видалити');
     deleteButton.attr({ id : 'deleteButton', onclick : 'deleteButton()' });
 } 
+
+const raiseAlert = (text, type) =>{
+    $('#alerts').append(`<div class="alert alert-${type}" id="temp_alert_${type}" role="alert">${text}</div>`);
+    setTimeout(()=>{$(`#temp_alert_${type}`).remove()}, 10000);
+}

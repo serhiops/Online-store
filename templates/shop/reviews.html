@@ -36,15 +36,15 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <form mehod="post" id="comentForm" acttion="{% url 'shop:add_review' %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="comentTextarea">Впишіть ваш коментар</label>
-                        <textarea class="form-control" style="color:black;" id="comentTextarea" rows="3"></textarea>
-                        <input type="hidden" value="{{ productId }}" id="productId">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Відправити</button>
-                </form>
+                    <form mehod="post" id="comentForm" acttion="{% url 'shop:add_review' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="comentTextarea">Впишіть ваш коментар</label>
+                            <textarea class="form-control" style="color:black;" id="comentTextarea" rows="3"></textarea>
+                            <input type="hidden" value="{{ productId }}" id="productId">
+                        </div>
+                        <button type="submit" style="float:right;" class="btn btn-primary" {% if not isBoughtByUser %} disabled {% endif %}data-bs-toggle="popover" title="Заголовок всплывающего сообщения">Відправити</button>
+                    </form>
                 <div id="comentList">
                     {% for review in reviews %}
                         <div class="card reviews-cart" {% if review.author == user %} id="authorsCard" {% endif %}>

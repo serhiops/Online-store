@@ -1,8 +1,7 @@
-import re
 from django.shortcuts import render, redirect
-from django.http import HttpRequest, HttpResponse, JsonResponse
-from .models import Category, Product, Cart, TempOrdering, Ordering, MailingList, Ip, Review
-from django.views.generic import ListView, DetailView, FormView, View
+from django.http import HttpRequest, HttpResponse
+from .models import Category, Product, Cart, TempOrdering, Ordering, Ip, Review
+from django.views.generic import ListView, DetailView, FormView
 from . import forms
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -71,6 +70,7 @@ class DetailProduct(DetailView, FormView, BaseMixin):
         context = super().get_context_data(**kwargs)
         context['currentCategory'] = Category.objects.get(slug = self.kwargs['categorySlug'])
         context['relatedProducts'] = Product.objects.filter(is_active = True).order_by('?')[:4]
+        context['countOfReviews']  = Review.objects.filter(product = self.get_object()).count()
         return context
 
     def form_valid(self, form : Form) -> HttpResponse:
@@ -120,7 +120,7 @@ def cartView(request : HttpRequest) -> HttpResponse:
             d['form-INITIAL_FORMS'] = '0' 
             form = CartFormSet(data = d)
             if form.is_valid(): 
-                ordering , _ = Ordering.objects.get_or_create( user = request.user )
+                ordering , _ = Ordering.objects.get_or_create( user = request.user, is_done = False )
                 TempOrdering.objects.filter(main_ordering = ordering).delete()
                 total_price = 0
                 tempOrderingList = list()
@@ -223,6 +223,11 @@ class Reviews(ListView, BaseMixin):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        queryset = self.get_queryset()
-        context['productId'] = Product.objects.get( slug = self.kwargs['productSlug'] ).pk
+        currentProductPk = Product.objects.get( slug = self.kwargs['productSlug'] ).pk
+        context['productId'] = currentProductPk
+        if self.request.user.is_authenticated:
+            ordering = self.request.user.get_user.filter(is_done = True).first()
+            if ordering is not None:
+                context['isBoughtByUser'] = ordering.tempOrderingList.filter(product = currentProductPk).exists()
+
         return context
