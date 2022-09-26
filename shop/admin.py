@@ -5,6 +5,9 @@ from django.contrib.auth.models import Group
 from authentication.forms import CustomUserChangeForm, SignupForm
 
 from .models import CustomUser, Category, Review, Product, Cart, Ip, TempOrdering, Photo, Ordering, MailingList
+from django import forms
+
+from ckeditor_uploader.widgets import CKEditorUploadingWidget 
 
 class CustomUserAdmin(UserAdmin):
     add_form = SignupForm
@@ -41,7 +44,14 @@ class ReviewAdmin(admin.ModelAdmin):
     list_filter = ('created', 'updated')
     search_fields = ('created', 'updated' )
 
+class PostAdminForm(forms.ModelForm):
+    description = forms.CharField(widget=CKEditorUploadingWidget())
+    class Meta:
+        model = Product
+        fields = "__all__"
+
 class ProductAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     list_display = ('name', 'price', 'created', 'updated','is_active' )
     list_display_links = ('name', 'price',)
     list_filter = ('created', 'updated' ,'price', 'views')
