@@ -6,7 +6,7 @@
   {% csrf_token %}
   <div class="row">
     <div class="col-xl-12"> 
-      <label for="{{ form.subject.id_for_label }}">Subject*</label>
+      <label for="{{ form.subject.id_for_label }}">Тема*</label>
       {{ form.subject }}
       <div class="invalid-feedback">
         {{ form.subject.errors }}
@@ -14,7 +14,7 @@
     </div>
 
     <div class="col-xl-12"> 
-        <label for="{{ form.message.id_for_label }}">Message*</label>
+        <label for="{{ form.message.id_for_label }}">Повідомлення*</label>
         {{ form.message }}
         <div class="invalid-feedback">
           {{ form.message.errors }}

@@ -25,8 +25,8 @@
                             <div class="breadcrumbs">
                                 <ul>
                                     <li><a href="{% url 'shop:index' %}">Головна</a></li>
-                                    <li><a href="#">Категорії</a></li>
-                                    <li>Кошик</li>
+                                    <li><a href="{{ categories.first.get_absolute_url }}">Категорії</a></li>
+                                    <li>Кошик</li> 
                                 </ul>
                             </div>
                         </div>

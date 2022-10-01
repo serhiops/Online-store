@@ -207,7 +207,7 @@ class Contact(FormView, BaseMixin):
     def form_valid(self, form) -> HttpResponse:
         send_mail(
             subject = form.cleaned_data['subject'],
-            message = "Повідомлення від користувача сайту : %s" % form.cleaned_data['message'],
+            message = "Повідомлення від користувача сайту : \n%s" % form.cleaned_data['message'],
             from_email = None,
             recipient_list = (GOOGLE_EMAIL_HOST_USER,)
         )
@@ -223,11 +223,11 @@ class Reviews(ListView, BaseMixin):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        currentProductPk = Product.objects.get( slug = self.kwargs['productSlug'] ).pk
-        context['productId'] = currentProductPk
+        currentProduct = Product.objects.get( slug = self.kwargs['productSlug'] )
+        context['currentProduct'] = currentProduct
         if self.request.user.is_authenticated:
             ordering = self.request.user.get_user.filter(is_done = True).first()
             if ordering is not None:
-                context['isBoughtByUser'] = ordering.tempOrderingList.filter(product = currentProductPk).exists()
+                context['isBoughtByUser'] = ordering.tempOrderingList.filter(product = currentProduct).exists()
 
         return context

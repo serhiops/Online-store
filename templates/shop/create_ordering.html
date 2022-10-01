@@ -19,9 +19,9 @@
                         <div class="home_content">
                             <div class="breadcrumbs">
                                 <ul>
-                                    <li><a href="index.html">Home</a></li>
-                                    <li><a href="cart.html">Shopping Cart</a></li>
-                                    <li>Checkout</li>
+                                    <li><a href="{% url 'shop:index' %}">Головна</a></li>
+                                    <li><a href="{% url 'shop:cart' %}">Кошик</a></li>
+                                    <li>Оформлення замовлення</li>
                                 </ul>
                             </div>
                         </div>
@@ -66,15 +66,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div >
-                                    
+                            <div>  
                                 <label for="{{ form.number_of_phone.id_for_label }}">Номер телефону*</label>
                                 {{ form.number_of_phone }}
                                 <div class="invalid-feedback">
                                     {{ form.number_of_phone.errors }}
                                 </div>
                             </div>
-
                             <div>
                                 <label for="{{ form.city.id_for_label }}">Населенй пункт*</label>
                                 {{ form.city }}
@@ -84,9 +82,7 @@
                                 <datalist id="cityname">
 
                                 </datalist>
-
                             </div>
-
                             <div>
                                 <label for="{{ form.post_office.id_for_label }}">Поштове відділення*</label>
                                 {{ form.post_office }}
@@ -96,8 +92,6 @@
                                 <datalist id="postname">
 
                                 </datalist>
-
-                                
                             </div>
                     </div>
                 </div>

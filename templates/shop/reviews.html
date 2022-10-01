@@ -14,14 +14,14 @@
         <div class="home_background" style="background-image:url({% static 'images/cart.jpg' %})"></div>
         <div class="home_content_container">
             <div class="container">
-                <div class="row">
+                <div class="row"> 
                     <div class="col">
                         <div class="home_content">
                             <div class="breadcrumbs">
                                 <ul>
                                     <li><a href="{% url 'shop:index' %}">Головна</a></li>
-                                    <li><a href="#">Категорії</a></li>
-                                    <li>Кошик</li>
+                                    <li><a href="{{ currentProduct.get_absolute_url }}">{{ currentProduct.name|truncatechars:15 }}</a></li>
+                                    <li>Коментарі</li>
                                 </ul>
                             </div>
                         </div>
@@ -41,7 +41,7 @@
                         <div class="form-group">
                             <label for="comentTextarea">Впишіть ваш коментар</label>
                             <textarea class="form-control" style="color:black;" id="comentTextarea" rows="3"></textarea>
-                            <input type="hidden" value="{{ productId }}" id="productId">
+                            <input type="hidden" value="{{ currentProduct.pk }}" id="productId">
                         </div>
                         <button type="submit" style="float:right;" class="btn btn-primary" {% if not isBoughtByUser %} disabled {% endif %}data-bs-toggle="popover" title="Заголовок всплывающего сообщения">Відправити</button>
                     </form>

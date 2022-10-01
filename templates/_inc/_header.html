@@ -4,32 +4,30 @@
             <div class="row">
                 <div class="col">
                     <div class="header_content d-flex flex-row align-items-center justify-content-start">
-                        <div class="logo"><a href="#">Sublime.</a></div>
+                        <div class="logo"><a href="#">Electron.</a></div>
                         <nav class="main_nav">
                             <ul>
                                 <li class="hassubs active">
-                                    <a href="{% url 'shop:index' %}">Home</a>
+                                    <a href="{% url 'shop:index' %}">Головна</a>
                                     <ul>
-                                        <li><a href="product.html">Product</a></li>
-                                        <li><a href="cart.html">Cart</a></li>
-                                        <li><a href="checkout.html">Check out</a></li>
-                                        <li><a href="contact.html">Contact</a></li>
+                                        <li><a href="{% url 'shop:cart' %}">Кошик</a></li>
+                                        <li><a href="{% url 'shop:contact' %}">Контакт</a></li>
                                     </ul>
                                 </li>
                                 <li class="hassubs">
                                     <a href="{{ categories.first.get_absolute_url }}">Категорії</a>
                                     <ul>
                                         {% for i in categories %}
-                                        <li><a href="{% url 'shop:by_category' i.slug %}">{{ i.name}}</a></li>
+                                        <li><a href="{{ i.get_absolute_url }}">{{ i.name }}</a></li>
                                         {% endfor %}
                                     </ul>
                                 </li>
-                                <li><a href="{% url 'shop:contact' %}">Contact</a></li>
                                 {% if not user.is_authenticated %}
-                                <li><a href="{% url 'account_login' %}">Авторизуватися</a></li>
-                                <li><a href="{% url 'account_signup' %}">Зареєструватися</a></li>
+                                    <li><a href="{% url 'account_login' %}">Авторизуватися</a></li>
+                                    <li><a href="{% url 'account_signup' %}">Зареєструватися</a></li>
                                 {% else %}
-                                <li><a href="{% url 'account_logout' %}">Вийти</a></li>
+                                    <li><a href="{% url 'shop:contact' %}">Контакт</a></li>
+                                    <li><a href="{% url 'account_logout' %}">Вийти</a></li>
                                 {% endif %}
                             </ul>
                         </nav>
@@ -46,7 +44,7 @@
                                                 c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5v-41h45.2l26.9,302.3C412.8,445.2,392.1,462,366.8,462z"/>
                                         </g>
                                     </svg>
-                                    <div>Cart <span>({{ cartSize }})</span></div>
+                                    <div>Кошик <span>({{ cartSize }})</span></div>
                                 </a>
                             </div>
                             <div class="search">
@@ -87,7 +85,6 @@
                 <div class="col">
                     <div class="search_panel_content d-flex flex-row align-items-center justify-content-end">
                         <form method="get" action="{% url 'shop:search_products' %}">
-                            
                             {{ form.text }}
                         </form>
                     </div>
@@ -120,27 +117,27 @@
             </div>
             <ul class="page_menu_nav menu_mm">
                 <li class="page_menu_item has-children menu_mm">
-                    <a href="index.html">Home<i class="fa fa-angle-down"></i></a>
+                    <a href="{% url 'shop:index' %}">Головна<i class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection menu_mm">
-                        <li class="page_menu_item menu_mm"><a href="categories.html">Categories<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="product.html">Product<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="cart.html">Cart<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="checkout.html">Checkout<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="contact.html">Contact<i class="fa fa-angle-down"></i></a></li>
+                        <li class="page_menu_item menu_mm"><a href="{% url 'shop:cart' %}">Кошик<i class="fa fa-angle-down"></i></a></li>
+                        <li class="page_menu_item menu_mm"><a href="{% url 'shop:contact' %}">Контакт<i class="fa fa-angle-down"></i></a></li>
                     </ul>
                 </li>
                 <li class="page_menu_item has-children menu_mm">
-                    <a href="categories.html">Categories<i class="fa fa-angle-down"></i></a>
+                    <a href="{{ categories.first.get_absolute_url }}">Категорії<i class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection menu_mm">
-                        <li class="page_menu_item menu_mm"><a href="categories.html">Category<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="categories.html">Category<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="categories.html">Category<i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="categories.html">Category<i class="fa fa-angle-down"></i></a></li>
+                        {% for i in categories %}
+                            <li class="page_menu_item menu_mm"><a href="{{ i.get_absolute_url }}">{{ i.name }}<i class="fa fa-angle-down"></i></a></li>
+                        {% endfor %}
                     </ul>
                 </li>
-                <li class="page_menu_item menu_mm"><a href="index.html">Accessories<i class="fa fa-angle-down"></i></a></li>
-                <li class="page_menu_item menu_mm"><a href="#">Offers<i class="fa fa-angle-down"></i></a></li>
-                <li class="page_menu_item menu_mm"><a href="contact.html">Contact<i class="fa fa-angle-down"></i></a></li>
+                {% if not user.is_authenticated %}
+                    <li class="page_menu_item menu_mm"><a href="{% url 'account_login' %}">Авторизуватися<i class="fa fa-angle-down"></i></a></li>
+                    <li class="page_menu_item menu_mm"><a href="{% url 'account_signup' %}">Зареєструватися<i class="fa fa-angle-down"></i></a></li>
+                {% else %}
+                    <li class="page_menu_item menu_mm"><a href="{% url 'shop:contact' %}">Контакт<i class="fa fa-angle-down"></i></a></li>
+                    <li><a href="{% url 'account_logout' %}">Вийти</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -149,7 +146,6 @@
 
     <div class="menu_social">
         <ul>
-            <li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
             <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
             <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
             <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
