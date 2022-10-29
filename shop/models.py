@@ -96,10 +96,10 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         send_mail(
-            'Повідомлення від інтернет-магазину.',
-            'На сайті з\'явився новий товар в категорії "%s" : %s.' % (self.category.name, self.name),
-            from_email = None,
-            *MailingList.objects.values_list('email')
+            subject = 'Повідомлення від інтернет-магазину.',
+            message = 'На сайті з\'явився новий товар в категорії "%s" : %s.' % (self.category.name, self.name),
+            from_email = None,                                                #default value from settings.py
+            recipient_list = set(*MailingList.objects.values_list('email')),
         )
         return super().save(*args, **kwargs)
 

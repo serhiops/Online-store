@@ -11,7 +11,7 @@ from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString, get_
 from django.db.models import Q
 from django.core.mail import send_mail
 from config.config import GOOGLE_EMAIL_HOST_USER
-
+from .addintionaly.decorators import accessIfCartNotEmpty
 
 class Index(FormView, BaseMixin):
     template_name = 'shop/index.html'
@@ -42,6 +42,7 @@ class SearchProducts(ListView, BaseMixin):
         context['serchPage'] = True
         context['messageText'] = 'По запиту %s знайдено %d товарів!' % (self.request.GET['text'], count)
         context['messageType'] = 'success' if count else 'danger'
+        context['title'] = 'Пошук товарів'
         return context
 
 class ByCategory(ListView, BaseMixin):
@@ -54,8 +55,10 @@ class ByCategory(ListView, BaseMixin):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context['currentCategory'] = Category.objects.get(slug = self.kwargs['categorySlug'])
+        curCategory = Category.objects.get(slug = self.kwargs['categorySlug'])
+        context['currentCategory'] = curCategory
         context['serchMenu'] = True
+        context['title'] = 'Категорія : %s' % curCategory.name
         return context
    
 class DetailProduct(DetailView, FormView, BaseMixin):
@@ -68,9 +71,11 @@ class DetailProduct(DetailView, FormView, BaseMixin):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
+        product = self.get_object()
         context['currentCategory'] = Category.objects.get(slug = self.kwargs['categorySlug'])
-        context['relatedProducts'] = Product.objects.filter(is_active = True).order_by('?')[:4]
-        context['countOfReviews']  = Review.objects.filter(product = self.get_object()).count()
+        context['relatedProducts'] = Product.objects.filter(is_active = True, category = product.category).order_by('?')[:4]
+        context['countOfReviews']  = Review.objects.filter(product = product).count()
+        context['title'] = product.name
         return context
 
     def form_valid(self, form : Form) -> HttpResponse:
@@ -99,6 +104,7 @@ class DetailProduct(DetailView, FormView, BaseMixin):
             self.get_object().views.add(Ip.objects.create(ip = ip))
         return super().get(request, *args, **kwargs)
 
+@accessIfCartNotEmpty(reverse_url = 'shop:index')
 def cartView(request : HttpRequest) -> HttpResponse:
     products = list()
     context = dict()
@@ -147,6 +153,7 @@ def cartView(request : HttpRequest) -> HttpResponse:
         context['products'] = productQty
         context['totalPrice'] = sum( getPriceByDiscount(product) * qty for product, qty in productQty )
     
+    context['title'] = 'Кошик'
     return render( request, 'shop/cart.html', context)
 
 def clearCart(request : HttpRequest) -> HttpResponse:
@@ -185,6 +192,7 @@ class CreateOrdering(FormView, DetailView, BaseMixin):
     def get_context_data(self, **kwargs) -> dict:
         context =  super().get_context_data(**kwargs)
         context['tempOrderings'] = TempOrdering.objects.filter(main_ordering = self.get_object())
+        context['title'] = 'Створення замовлення'
         return context
 
     def get_form_kwargs(self) -> dict:
@@ -214,6 +222,11 @@ class Contact(FormView, BaseMixin):
         messages.success(self.request, 'Дякую за повідомлення!')
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Контактна лінія'
+        return context
+
 class Reviews(ListView, BaseMixin):
     template_name = 'shop/reviews.html'
     context_object_name = 'reviews'
@@ -229,5 +242,5 @@ class Reviews(ListView, BaseMixin):
             ordering = self.request.user.get_user.filter(is_done = True).first()
             if ordering is not None:
                 context['isBoughtByUser'] = ordering.tempOrderingList.filter(product = currentProduct).exists()
-
+        context['title'] = 'Коментарі : %s' % currentProduct.name
         return context

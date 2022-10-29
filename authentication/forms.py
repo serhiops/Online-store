@@ -6,7 +6,8 @@ from allauth.account.forms import (
     LoginForm as AllauthLoginForm, 
     SignupForm as AllauthSignupForm,
     ResetPasswordForm as AllauthResetPasswordForm,
-    ResetPasswordKeyForm as AllauthResetPasswordKeyForm
+    ResetPasswordKeyForm as AllauthResetPasswordKeyForm,
+
 )
 from allauth.socialaccount.forms import SignupForm as AllauthSocialAccountSignupForm
 
@@ -27,8 +28,7 @@ class LoginForm(AllauthLoginForm):
         data : dict = self.request.session.get('cart_pk_list', {})
         if data:
             products = Product.objects.filter(pk__in = data.keys())
-            Cart.objects.filter(product__in = Product.objects.filter(pk__in = data.keys()),
-                                user = self.request.user).delete()
+            Cart.objects.filter(product__in = products, user = self.request.user).delete()
             
             cartList = list()
             for product_id, qty in data.items():

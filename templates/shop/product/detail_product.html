@@ -50,11 +50,11 @@
                             {% endif %}
 						<!-- In Stock -->
 						<div class="in_stock_container">
-							<div class="availability">Availability:</div>
+							<div class="availability">Наявність:</div>
 							{% if product.in_stock %}
-								<span>In Stock</span>
+								<span>Є на складі</span>
 							{% else %}
-								<span style="color:red;">Out of Stock</span>
+								<span style="color:red;">Немає</span>
 							{% endif %}
 						</div>
 						<div class="details_text">
@@ -95,12 +95,14 @@
 			<div class="row description_row">
 				<div class="col">
 					<div class="description_title_container">
-						<div class="description_title">Description</div>
+						<div class="description_title">Опис</div>
 						<div class="reviews_title"><a href="{{ product.get_absolute_review_url }}">Коментарів<span> {{ countOfReviews }}</span></a></div>
 						<div class="reviews_title">Переглядів: <span>{{ product.getTotalViews }}</span></div>
 					</div>
 					<div class="description_text">
+						{% autoescape off %}
 						<p>{{ product.description }}</p>
+						{% endautoescape %}
 					</div>
 				</div>
 			</div>
@@ -113,7 +115,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="col text-center">
-					<div class="products_title">Related Products</div>
+					<div class="products_title">Схожі товари</div>
 				</div>
 			</div>
 			<div class="row">
@@ -142,3 +144,7 @@
 
     {% include '_inc/_newsletter.html' %}
 {% endblock productContent %}
+
+{% block loadJS %}
+<script src="{% static 'js/product.js'%}"></script>
+{% endblock loadJS %}

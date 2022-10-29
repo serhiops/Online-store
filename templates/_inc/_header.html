@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col">
                     <div class="header_content d-flex flex-row align-items-center justify-content-start">
-                        <div class="logo"><a href="#">Electron.</a></div>
+                        <div class="logo"><a href="{% url 'shop:index' %}">Electron.</a></div>
                         <nav class="main_nav">
                             <ul>
                                 <li class="hassubs active">
@@ -47,8 +47,8 @@
                                     <div>Кошик <span>({{ cartSize }})</span></div>
                                 </a>
                             </div>
+                             {% if serchMenu %}
                             <div class="search">
-                                {% if serchMenu %}
                                 <div class="search_icon">
                                     <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                                     viewBox="0 0 475.084 475.084" style="enable-background:new 0 0 475.084 475.084;"
@@ -64,13 +64,13 @@
                                              M291.363,291.358c-25.029,25.033-55.148,37.549-90.364,37.549c-35.21,0-65.329-12.519-90.36-37.549
                                             c-25.031-25.029-37.546-55.144-37.546-90.36c0-35.21,12.518-65.334,37.546-90.36c25.026-25.032,55.15-37.546,90.36-37.546
                                             c35.212,0,65.331,12.519,90.364,37.546c25.033,25.026,37.548,55.15,37.548,90.36C328.911,236.214,316.392,266.329,291.363,291.358z
-                                            "/>
+                                            "/> 
                                     </g>
                                 </svg>
                                 </div>
                             </div>
+                             {% endif %}
                             <div class="hamburger"><i class="fa fa-bars" aria-hidden="true"></i></div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
         </div>
     </div>
     {% if serchMenu %}
-    <!-- Search Panel -->
+
     <div class="search_panel trans_300">
         <div class="container">
             <div class="row">
@@ -92,8 +92,10 @@
             </div>
         </div>
     </div>
+
     {% endif %}
-    <!-- Social -->
+    
+
     <div class="header_social">
         <ul>
             <li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
@@ -104,31 +106,32 @@
     </div>
 </header>
 
-<!-- Menu -->
 
 <div class="menu menu_mm trans_300">
     <div class="menu_container menu_mm">
         <div class="page_menu_content">
-                        
+                      
             <div class="page_menu_search menu_mm">
                 <form method="post">
                     <input type="search" required="required" class="page_menu_search_input menu_mm" placeholder="Search for products...">
                 </form>
             </div>
+            
             <ul class="page_menu_nav menu_mm">
                 <li class="page_menu_item has-children menu_mm">
                     <a href="{% url 'shop:index' %}">Головна<i class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection menu_mm">
-                        <li class="page_menu_item menu_mm"><a href="{% url 'shop:cart' %}">Кошик<i class="fa fa-angle-down"></i></a></li>
+                        <li class="page_menu_item menu_mm"><a {% if cartSize %}href="{% url 'shop:cart' %}"{% endif %}>Кошик
+                            <i class="fa fa-angle-down"></i></a></li>
                         <li class="page_menu_item menu_mm"><a href="{% url 'shop:contact' %}">Контакт<i class="fa fa-angle-down"></i></a></li>
                     </ul>
                 </li>
                 <li class="page_menu_item has-children menu_mm">
-                    <a href="{{ categories.first.get_absolute_url }}">Категорії<i class="fa fa-angle-down"></i></a>
+                    <a href="#">Категорії<i class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection menu_mm">
                         {% for i in categories %}
                             <li class="page_menu_item menu_mm"><a href="{{ i.get_absolute_url }}">{{ i.name }}<i class="fa fa-angle-down"></i></a></li>
-                        {% endfor %}
+                        {% endfor %} 
                     </ul>
                 </li>
                 {% if not user.is_authenticated %}

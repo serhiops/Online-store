@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% load humanize %}
+{% load humanize %} 
 
 {% block content %}
 
@@ -177,3 +177,9 @@
 {% include 'shop/inc/iconBoxes.html' %} 
 {% include '_inc/_newsletter.html' %}
 {% endblock content %}
+
+{% block loadJS %}
+
+<script src="{% static 'js/custom.js'%}"></script>
+
+{% endblock loadJS %}

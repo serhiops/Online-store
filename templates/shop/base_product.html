@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 {% load static %}
-{% block loadCSS %}
+{% block loadCSS %} 
 
 <link rel="stylesheet" type="text/css" href="{% static 'styles/categories.css'%}">
 <link rel="stylesheet" type="text/css" href="{% static 'styles/categories_responsive.css'%}">
@@ -10,7 +10,6 @@
 {% endblock loadCSS %}
 
 {% block content %}
-
 
 <div class="home">
     {% if serchPage %}
@@ -57,10 +56,3 @@
 {% endblock productContent %}
 
 {% endblock content %}
-
-{% block loadJS %}
-
-<script src="{% static 'js/categories.js' %}"></script>
-<script src="{% static 'js/product.js'%}"></script>
-
-{% endblock loadJS %}

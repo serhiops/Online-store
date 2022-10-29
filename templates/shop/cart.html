@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'styles/cart_responsive.css' %}">
 {% endblock loadCSS  %}
 
-{% block content %}
+{% block content %} 
 <div class="home">
     {% include '_inc/_alerts.html' %}
     {% if not user.is_authenticated %}
@@ -91,7 +91,7 @@
 
             <div class="col-lg-6 offset-lg-2">
                 <div class="cart_total">
-                    <div class="section_title">Всього в корзині</div>
+                    <div class="section_title">Всього в кошику</div>
                     <div class="section_subtitle">Фінальна інформація</div>
                     <div class="cart_total_container">
                         <ul>
@@ -105,7 +105,7 @@
                             </li>
                         </ul>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg btn-block"{% if not user.is_authenticated %}disabled{% endif %}>Proceed to checkout</button>
+                    <button type="submit" class="btn btn-primary btn-lg btn-block"{% if not user.is_authenticated %}disabled{% endif %}>Перейти до оформлення замовлення</button>
                     </form>
                 </div>
             </div>

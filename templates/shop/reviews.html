@@ -43,8 +43,9 @@
                             <textarea class="form-control" style="color:black;" id="comentTextarea" rows="3"></textarea>
                             <input type="hidden" value="{{ currentProduct.pk }}" id="productId">
                         </div>
-                        <button type="submit" style="float:right;" class="btn btn-primary" {% if not isBoughtByUser %} disabled {% endif %}data-bs-toggle="popover" title="Заголовок всплывающего сообщения">Відправити</button>
+                        <button type="submit"  class="btn btn-primary" {% if not isBoughtByUser %} disabled {% endif %}data-bs-toggle="popover" title="Заголовок всплывающего сообщения">Відправити</button>
                     </form>
+                    
                 <div id="comentList">
                     {% for review in reviews %}
                         <div class="card reviews-cart" {% if review.author == user %} id="authorsCard" {% endif %}>
