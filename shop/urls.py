@@ -15,5 +15,6 @@ urlpatterns = [
     path('search_products/', views.SearchProducts.as_view(), name = 'search_products'),
     path('add_to_mailing_list/', api.addToMailingList, name = 'add_to_mailing_list'),
     path('contact/', views.Contact.as_view(), name = 'contact'),
-    path('add_review/', api.ReviewApi.as_view(), name = 'add_review')
+    path('add_review/', api.ReviewApi.as_view(), name = 'add_review'),
+    path('statistics_for_admin/', views.StatisticsForAdmin.as_view())
 ]

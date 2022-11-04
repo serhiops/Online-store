@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html> 
+<html lang="uk">
+<head>
+    <title>Статистика магазину</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sublime project">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/bootstrap4/bootstrap.min.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">                  
+                <table class="table table-bordered">
+                    
+                    <thead class="thead-dark">
+                      <tr>
+                        <th scope="col">Позиція</th>
+                        <th scope="col">Дані</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>Кількість унікальних відвідувань за день</td>
+                        <td>{{visits_for_day}}</td>
+                      </tr>
+                      <tr>
+                        <td>Кількість унікальних відвідувань за весь час</td>
+                        <td>{{total_visits}}</td>
+                      </tr>
+                      <tr>
+                        <td>Кількість замовлень за день</td>
+                        <td>{{count_of_todays_orders}}</td>
+                      </tr>
+                      <tr>
+                        <td>Кількість замовлень за весь час</td>
+                        <td>{{total_orders}}</td>
+                      </tr>
+                      <tr>
+                        <td>Найбільш популярні товари дня</td>
+                        <td>
+                            {% for product in most_popular_for_day %}
+                                <p><a href="{{ product.1.get_absolute_url }}">{{ product.1.name }}</a> ({{product.0}} переглядів)</p>
+                            {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Найменш популярні товари дня</td>
+                        <td>
+                            {% for product in most_unpopular_for_day %}
+                                    <p><a href="{{ product.1.get_absolute_url }}">{{ product.1.name }}</a> ({{product.0}} переглядів)</p>
+                            {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Найбільш популярні товари за весь час</td>
+                        <td>
+                            {% for product in most_popular_for_all %}
+                                <p><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.cnt}} переглядів)</p>
+                            {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Найменш популярні товари за весь час</td>
+                        <td>
+                            {% for product in most_unpopular_for_all %}
+                                <p><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.cnt}} переглядів)</p>
+                            {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                    <td>Часто зустрічаємі товари в кошику</td>
+                    <td>
+                        {% for product in product_in_cart %}
+                            <p><a href="{{ product.get_absolute_url }}">{{ product.name }}</a> ({{product.cnt}} разів)</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                    </tbody>
+                </table>
+                  
+            </div>
+        </div>
+    </div>
+</body>
+</html>

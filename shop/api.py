@@ -44,7 +44,7 @@ class ReviewApi(View):
     def update(self) -> JsonResponse:        
         review = Review.objects.get(author = self.request.user, product = self.request.POST['productId'])
         review.text = self.request.POST['text']
-        review.save(update_fields = ('text',))
+        review.save(update_fields = ('text','updated'))
         return JsonResponse({ 'sucess' : True })
 
     @errorJsonResponse
@@ -53,7 +53,7 @@ class ReviewApi(View):
         return JsonResponse({'success' : True})
 
 def addToMailingList(request : HttpRequest) -> JsonResponse:
-    mail, create = MailingList.objects.get_or_create(email = request.POST.get('mail', ''))
+    _, create = MailingList.objects.get_or_create(email = request.POST.get('mail', ''))
     request.session['isInMailingList'] = create
     data = {
         'text' : 'Дякую, що підписалися на нашу розсилку!' if create else 'Ця пошта вже підписана на нашу розсилку!',

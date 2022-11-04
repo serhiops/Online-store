@@ -6,6 +6,7 @@ from django.urls import reverse
 from .addintionaly.user_manager import UserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
+from datetime import datetime
 
 class CustomUser(AbstractUser,PermissionsMixin):
     username = None
@@ -105,6 +106,9 @@ class Product(models.Model):
 
     def getTotalViews(self):
         return self.views.count()
+    
+    def getCountOfTodaysIP(self):
+        return self.views.filter(last_time__contains = datetime.today().date()).count()
 
 class Cart(models.Model):
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, related_name="cartListProduct", verbose_name="product")
@@ -116,6 +120,7 @@ class Cart(models.Model):
 
 class Ip(models.Model):
     ip = models.CharField(max_length=100)
+    last_time = models.DateTimeField(auto_now=True, verbose_name="updated")
 
     def __str__(self):
         return self.ip

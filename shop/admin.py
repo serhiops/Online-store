@@ -65,8 +65,8 @@ class CartAdmin(admin.ModelAdmin):
     search_fields = ('added',)
 
 class IpAdmin(admin.ModelAdmin):
-    list_display = ('ip',)
-    list_display_links = ('ip',)
+    list_display = ('ip', 'last_time')
+    list_display_links = ('ip', 'last_time')
 
 class TempOrderingAdmin(admin.ModelAdmin):
     list_display = ('product','main_ordering','created',)
@@ -77,8 +77,8 @@ class PhotoAdmin(admin.ModelAdmin):
     list_display = ('id',)
 
 class OrderingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'first_name', 'last_name')
-    list_display_links = ('user', 'first_name', 'last_name')
+    list_display = ('user', 'first_name', 'last_name', 'created')
+    list_display_links = ('user', 'first_name', 'last_name', )
 
 class MailingListAdmin(admin.ModelAdmin):
     list_display = ('email', )

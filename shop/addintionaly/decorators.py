@@ -26,3 +26,16 @@ def accessIfCartNotEmpty(reverse_url, level:logging = logging.DEBUG):
             return foo(request, *args, **kwargs)
         return wrapper
     return decorate
+
+def accessIfIsAdmin(reverse_url = '', level:logging = logging.DEBUG):
+    def decorate(foo):
+        log = logging.getLogger(foo.__module__)
+        logmsg = foo.__name__
+        @wraps(foo)
+        def wrapper(self, request : HttpRequest, *args, **kwargs):
+            log.log(level, logmsg)
+            if request.user.is_anonymous:
+                return redirect(reverse_url)
+            return foo(self, request, *args, **kwargs)
+        return wrapper
+    return decorate

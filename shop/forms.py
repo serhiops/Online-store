@@ -36,32 +36,39 @@ class OrderingForm(forms.ModelForm):
             'first_name' : forms.TextInput(attrs={
                 'id' : 'checkout_name',
                 'required' : 'required',
-                'class' : 'form-control black-color',
+                'class' : 'form-control',
+                'style' : 'color:black',
             }),
             'last_name' : forms.TextInput(attrs={
                 'id' : 'checkout_last_name',
                 'required' : 'required',
-                'class' : 'form-control black-color',
+                'class' : 'form-control',
+                'style' : 'color:black',
             }),
             'city' : forms.TextInput(attrs={
                 'city' : 'city',
                 'list' : 'cityname',
-                'class' : 'form-control black-color',
+                'class' : 'form-control',
+                'style' : 'color:black',
                 'id' : 'checkout_city',
             }),
             'post_office' : forms.TextInput(attrs={
                 'name' : 'post',
                 'list' : 'postname',
-                'class' : 'form-control black-color',
+                'class' : 'form-control',
+                'style' : 'color:black',
                 'id' : 'checkout_post',
                 'placeholder' : 'Введіть номер відділення або поштомату',
                 'disabled' : 'disabled',
             }),
             'payment' : forms.RadioSelect(attrs={
-                'class' : 'form-control black-color',
+                'class' : 'form-control',
+                'style' : 'color:black',
+                
             }),
             'number_of_phone' : forms.TextInput(attrs={
-                'class' : 'form-control black-color',
+                'class' : 'form-control',
+                'style' : 'color:black',
             })
         }
 

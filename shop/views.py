@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse
 from .models import Category, Product, Cart, TempOrdering, Ordering, Ip, Review
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, View
 from . import forms
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -11,7 +11,10 @@ from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString, get_
 from django.db.models import Q
 from django.core.mail import send_mail
 from config.config import GOOGLE_EMAIL_HOST_USER
-from .addintionaly.decorators import accessIfCartNotEmpty
+from .addintionaly.decorators import accessIfCartNotEmpty, accessIfIsAdmin
+from heapq import nlargest, nsmallest
+from datetime import datetime
+from django.db.models import Count
 
 class Index(FormView, BaseMixin):
     template_name = 'shop/index.html'
@@ -198,13 +201,17 @@ class CreateOrdering(FormView, DetailView, BaseMixin):
     def get_form_kwargs(self) -> dict:
         context = super().get_form_kwargs()
         ordering = self.get_object()
-        context['initial'] = {
-            'city' : ordering.city,
-            'first_name' : ordering.first_name,
-            'last_name' : ordering.last_name,
-            'post_office' : ordering.post_office,
-            'payment' : ordering.payment
-        }
+        if ordering:
+            context['initial'] = {
+                'city' : ordering.city,
+                'first_name' : ordering.first_name,
+                'last_name' : ordering.last_name,
+                'post_office' : ordering.post_office,
+                'payment' : ordering.payment,
+                'number_of_phone': ordering.number_of_phone
+            }
+        else:
+            context['initial'] = {'payment' : 'DBT'}
         return context
 
 class Contact(FormView, BaseMixin):
@@ -244,3 +251,25 @@ class Reviews(ListView, BaseMixin):
                 context['isBoughtByUser'] = ordering.tempOrderingList.filter(product = currentProduct).exists()
         context['title'] = 'Коментарі : %s' % currentProduct.name
         return context
+
+class StatisticsForAdmin(View):
+
+    @accessIfIsAdmin('shop:index')
+    def get(self, request, *args, **kwargs) -> HttpRequest:
+        products_for_day = [ (product.getCountOfTodaysIP(), product) for product in Product.objects.filter(is_active=True).prefetch_related('views') ]
+        product_for_all_time = Product.objects.filter(is_active=True).annotate(cnt=Count('views'))
+        total_visits = Ip.objects.all()
+        total_orderings = Ordering.objects.all()
+        context = {
+            'most_popular_for_day'   : nlargest(3, products_for_day ,key=lambda x:x[0]),
+            'most_unpopular_for_day' : nsmallest(3, products_for_day ,key=lambda x:x[0]),
+            'most_popular_for_all'   : product_for_all_time.order_by('-cnt'),
+            'most_unpopular_for_all' : product_for_all_time.order_by('cnt'),
+            'total_visits'           : total_visits.count(),
+            'visits_for_day'         : total_visits.filter(last_time__contains = datetime.today().date()).count(),
+            'count_of_todays_orders' : total_orderings.filter(created__contains = datetime.today().date()).count(),
+            'total_orders'           : total_orderings.count(),
+            'product_in_cart'        : Product.objects.annotate(cnt=Count('cartListProduct')).order_by('-cnt')[:3]
+        }
+       
+        return render(request, 'admin/main_statistics.html', context)
