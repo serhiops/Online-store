@@ -2,11 +2,17 @@
 {% load static %}
 {% load humanize %}
 
+{% block loadCSS %} 
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/categories.css'%}">
+  <link rel="stylesheet" type="text/css" href="{% static 'styles/categories_responsive.css'%}">
+{% endblock loadCSS %}
+
 {% block productContent %}
 <div class="products">
     <div class="container">
         <div class="row">
             <div class="col">
+              
                 <div class="sorting_bar d-flex flex-md-row flex-column align-items-md-center justify-content-md-start">
                     <div class="results">Знайдено <span>{{ products.count }}</span> результатів</div>
                     <div class="sorting_container ml-md-auto">
@@ -30,7 +36,7 @@
             <div class="col">
                 
                 <div class="product_grid">
-                    {% for product in products %}
+                  {% for product in products %}
                     <div class="product">
                         <div class="product_image"><img src="{{ product.photos.first.image.url }}" alt=""></div>
                         {% if product.discount %}
@@ -38,12 +44,12 @@
                         {% endif %}
                         <div class="product_content">
                             <div class="product_title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></div>
-                            <div class="product_price"> {{ product.price.amount|intcomma  }}</div>
+                            <div class="product_price"> {{ product.price.amount|intcomma  }} {{ product.price.currency }}</div> 
                         </div>
                     </div>
-                    {% endfor %}
+                  {% endfor %}
                 </div>
-                {% if page_obj.paginator.num_pages > 1 %}
+                {% if page_obj.paginator.num_pages > 1 %} 
                 <nav aria-label="...">
                     <ul class="pagination">
                     {% if page_obj.has_previous %}
@@ -100,5 +106,5 @@
 
 
 {% block loadJS %}
-<script src="{% static 'js/categories.js'%}"></script>
+  <script src="{% static 'js/categories.js'%}"></script>
 {% endblock loadJS %}

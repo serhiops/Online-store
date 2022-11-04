@@ -3,6 +3,11 @@
 
 {% load humanize %} 
 
+{% block loadCSS %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/responsive.css' %}">
+{% endblock loadCSS %}
+
 {% block content %}
 
 <!-- Home -->
@@ -179,7 +184,5 @@
 {% endblock content %}
 
 {% block loadJS %}
-
-<script src="{% static 'js/custom.js'%}"></script>
-
+    <script src="{% static 'js/custom.js'%}"></script>
 {% endblock loadJS %}

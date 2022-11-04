@@ -16,3 +16,6 @@ a.disabled {
     margin-top: 1%;
     margin-bottom: 1%;
 }
+html {
+    scroll-behavior: smooth;
+  }

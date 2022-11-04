@@ -10,7 +10,7 @@
                                 <li class="hassubs active">
                                     <a href="{% url 'shop:index' %}">Головна</a>
                                     <ul>
-                                        <li><a href="{% url 'shop:cart' %}">Кошик</a></li>
+                                        <li><a {% if cartSize %}href="{% url 'shop:cart' %}"{% else %} style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Кошик</a></li>
                                         <li><a href="{% url 'shop:contact' %}">Контакт</a></li>
                                     </ul>
                                 </li>
@@ -121,7 +121,7 @@
                 <li class="page_menu_item has-children menu_mm">
                     <a href="{% url 'shop:index' %}">Головна<i class="fa fa-angle-down"></i></a>
                     <ul class="page_menu_selection menu_mm">
-                        <li class="page_menu_item menu_mm"><a {% if cartSize %}href="{% url 'shop:cart' %}"{% endif %}>Кошик
+                        <li class="page_menu_item menu_mm"><a {% if cartSize %}href="{% url 'shop:cart' %}"{% else %} style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Кошик
                             <i class="fa fa-angle-down"></i></a></li>
                         <li class="page_menu_item menu_mm"><a href="{% url 'shop:contact' %}">Контакт<i class="fa fa-angle-down"></i></a></li>
                     </ul>

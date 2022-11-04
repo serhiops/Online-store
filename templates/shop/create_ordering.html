@@ -6,7 +6,6 @@
 {% block loadCSS %}
     <link rel="stylesheet" type="text/css" href="{% static 'styles/checkout.css'%}">
     <link rel="stylesheet" type="text/css" href="{% static 'styles/checkout_responsive.css'%}">
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/mystyles.css'%}">
 {% endblock loadCSS %}
 {% block content %}
 <div class="home">
@@ -144,7 +143,9 @@
 
                         </div>    
                     </div>
-                    <button type="submit" class="newsletter_button trans_200"><span>Відправити</span></button>
+                    <div>
+                        <button type="submit" class="btn btn-outline-dark btn-lg btn-block">Відправити</button>
+                    </div>
                 </form>
                 </div>
             </div>

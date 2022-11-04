@@ -3,6 +3,10 @@
 {% load humanize %}
 {% load persent %}
 
+{% block loadCSS %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/product.css'%}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/product_responsive.css'%}">
+{% endblock loadCSS %}
 
 {% block productContent %}
 	<!-- Product Details -->
