@@ -27,15 +27,15 @@ def accessIfCartNotEmpty(reverse_url, level:logging = logging.DEBUG):
         return wrapper
     return decorate
 
-def accessIfIsAdmin(reverse_url = '', level:logging = logging.DEBUG):
+def accessIf(func, reverse_url='shop:index',level:logging = logging.DEBUG):
     def decorate(foo):
         log = logging.getLogger(foo.__module__)
         logmsg = foo.__name__
         @wraps(foo)
         def wrapper(self, request : HttpRequest, *args, **kwargs):
             log.log(level, logmsg)
-            if request.user.is_anonymous:
-                return redirect(reverse_url)
-            return foo(self, request, *args, **kwargs)
+            if func(request.user):
+                return foo(self, request, *args, **kwargs)
+            return redirect(reverse_url)
         return wrapper
     return decorate

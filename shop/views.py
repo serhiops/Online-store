@@ -8,13 +8,12 @@ from django.contrib import messages
 from django.forms import Form, modelformset_factory, ModelForm
 from .mixins import BaseMixin
 from .addintionaly.funcs import getPriceByDiscount , getErrorMessageString, get_client_ip
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.core.mail import send_mail
 from config.config import GOOGLE_EMAIL_HOST_USER
-from .addintionaly.decorators import accessIfCartNotEmpty, accessIfIsAdmin
+from .addintionaly.decorators import accessIfCartNotEmpty,accessIf
 from heapq import nlargest, nsmallest
 from datetime import datetime
-from django.db.models import Count
 
 class Index(FormView, BaseMixin):
     template_name = 'shop/index.html'
@@ -25,7 +24,7 @@ class Index(FormView, BaseMixin):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         #del self.request.session['isInMailingList']
-        context['products'] = Product.objects.filter(is_active = True)[:8]
+        context['products'] = Product.objects.filter(is_active = True).order_by('?')[:8]
         context['serchMenu'] = True
         return context
 
@@ -234,6 +233,10 @@ class Contact(FormView, BaseMixin):
         context['title'] = 'Контактна лінія'
         return context
 
+    @accessIf(lambda x: x.is_authenticated)
+    def get(self, request: HttpRequest, *args: str, **kwargs) -> HttpResponse:
+        return super().get(request, *args, **kwargs)
+
 class Reviews(ListView, BaseMixin):
     template_name = 'shop/reviews.html'
     context_object_name = 'reviews'
@@ -254,7 +257,7 @@ class Reviews(ListView, BaseMixin):
 
 class StatisticsForAdmin(View):
 
-    @accessIfIsAdmin('shop:index')
+    @accessIf(lambda x: x.is_authenticated, 'shop:index')
     def get(self, request, *args, **kwargs) -> HttpRequest:
         products_for_day = [ (product.getCountOfTodaysIP(), product) for product in Product.objects.filter(is_active=True).prefetch_related('views') ]
         product_for_all_time = Product.objects.filter(is_active=True).annotate(cnt=Count('views'))
@@ -263,8 +266,8 @@ class StatisticsForAdmin(View):
         context = {
             'most_popular_for_day'   : nlargest(3, products_for_day ,key=lambda x:x[0]),
             'most_unpopular_for_day' : nsmallest(3, products_for_day ,key=lambda x:x[0]),
-            'most_popular_for_all'   : product_for_all_time.order_by('-cnt'),
-            'most_unpopular_for_all' : product_for_all_time.order_by('cnt'),
+            'most_popular_for_all'   : product_for_all_time.order_by('-cnt')[:3],
+            'most_unpopular_for_all' : product_for_all_time.order_by('cnt')[:3],
             'total_visits'           : total_visits.count(),
             'visits_for_day'         : total_visits.filter(last_time__contains = datetime.today().date()).count(),
             'count_of_todays_orders' : total_orderings.filter(created__contains = datetime.today().date()).count(),

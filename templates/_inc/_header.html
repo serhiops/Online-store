@@ -11,7 +11,7 @@
                                     <a href="{% url 'shop:index' %}">Головна</a>
                                     <ul>
                                         <li><a {% if cartSize %}href="{% url 'shop:cart' %}"{% else %} style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Кошик</a></li>
-                                        <li><a href="{% url 'shop:contact' %}">Контакт</a></li>
+                                        <li><a  {% if  user.is_authenticated %}href="{% url 'shop:contact' %}"{% else %}style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Контакт</a></li>
                                     </ul>
                                 </li>
                                 <li class="hassubs">
@@ -22,12 +22,12 @@
                                         {% endfor %}
                                     </ul>
                                 </li>
-                                {% if not user.is_authenticated %}
-                                    <li><a href="{% url 'account_login' %}">Авторизуватися</a></li>
-                                    <li><a href="{% url 'account_signup' %}">Зареєструватися</a></li>
-                                {% else %}
+                                {% if  user.is_authenticated %}
                                     <li><a href="{% url 'shop:contact' %}">Контакт</a></li>
                                     <li><a href="{% url 'account_logout' %}">Вийти</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'account_login' %}">Авторизуватися</a></li>
+                                    <li><a href="{% url 'account_signup' %}">Зареєструватися</a></li>
                                 {% endif %}
                             </ul>
                         </nav>
@@ -123,7 +123,7 @@
                     <ul class="page_menu_selection menu_mm">
                         <li class="page_menu_item menu_mm"><a {% if cartSize %}href="{% url 'shop:cart' %}"{% else %} style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Кошик
                             <i class="fa fa-angle-down"></i></a></li>
-                        <li class="page_menu_item menu_mm"><a href="{% url 'shop:contact' %}">Контакт<i class="fa fa-angle-down"></i></a></li>
+                        <li class="page_menu_item menu_mm"><a {% if  user.is_authenticated %}href="{% url 'shop:contact' %}"{% else %}style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Контакт<i class="fa fa-angle-down"></i></a></li>
                     </ul>
                 </li>
                 <li class="page_menu_item has-children menu_mm">
@@ -134,12 +134,12 @@
                         {% endfor %} 
                     </ul>
                 </li>
-                {% if not user.is_authenticated %}
+                {% if user.is_authenticated %}
+                    <li class="page_menu_item menu_mm"><a{% if  user.is_authenticated %}href="{% url 'shop:contact' %}"{% else %}style="pointer-events: none;cursor: default;color: #888;" {% endif %}>Контакт<i class="fa fa-angle-down"></i></a></li>
+                    <li><a href="{% url 'account_logout' %}">Вийти</a></li>
+                {% else %}
                     <li class="page_menu_item menu_mm"><a href="{% url 'account_login' %}">Авторизуватися<i class="fa fa-angle-down"></i></a></li>
                     <li class="page_menu_item menu_mm"><a href="{% url 'account_signup' %}">Зареєструватися<i class="fa fa-angle-down"></i></a></li>
-                {% else %}
-                    <li class="page_menu_item menu_mm"><a href="{% url 'shop:contact' %}">Контакт<i class="fa fa-angle-down"></i></a></li>
-                    <li><a href="{% url 'account_logout' %}">Вийти</a></li>
                 {% endif %}
             </ul>
         </div>

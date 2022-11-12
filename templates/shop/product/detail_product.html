@@ -62,7 +62,9 @@
 							{% endif %}
 						</div>
 						<div class="details_text">
+							{% autoescape off %}
 							<p>{{ product.description|truncatechars:360 }}</p> 
+							{% endautoescape %}
 						</div>
 
 						<!-- Product Quantity -->

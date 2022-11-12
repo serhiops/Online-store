@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
-{% load humanize %} 
+{% load humanize %}
 
 {% block loadCSS %}
 <link rel="stylesheet" type="text/css" href="{% static 'styles/main_styles.css' %}">
@@ -14,7 +14,7 @@
 
 <div class="home">
     <div class="home_slider_container">
-        
+
         {% include '_inc/_alerts.html' %}
 
         <!-- Home Slider -->
@@ -28,7 +28,7 @@
                             <div class="col">
                                 <div class="home_slider_content"  data-animation-in="fadeIn" data-animation-out="animate-out fadeOut">
                                     <div class="home_slider_title">Інтернет-магазин електроніки та аксесуарів.</div>
-                                    <div class="home_slider_subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a ultricies metus. Sed nec molestie eros. Sed viverra velit venenatis fermentum luctus.</div>
+                                    <div class="home_slider_subtitle">Купуйте найновішу техніку та аксеуари з доставкою по всій Україні.</div>
                                     <div class="button button_light home_button"><a href="{{ categories.first.get_absolute_url }}">Розпочати покупки</a></div>
                                 </div>
                             </div>
@@ -45,9 +45,9 @@
                         <div class="row">
                             <div class="col">
                                 <div class="home_slider_content"  data-animation-in="fadeIn" data-animation-out="animate-out fadeOut">
-                                    <div class="home_slider_title">A new Online Shop experience.</div>
-                                    <div class="home_slider_subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a ultricies metus. Sed nec molestie eros. Sed viverra velit venenatis fermentum luctus.</div>
-                                    <div class="button button_light home_button"><a href="#">Shop Now</a></div>
+                                    <div class="home_slider_title">Інтернет-магазин електроніки та аксесуарів.</div>
+                                    <div class="home_slider_subtitle">Купуйте найновішу техніку та аксеуари з доставкою по всій Україні.</div>
+                                    <div class="button button_light home_button"><a href="{{ categories.first.get_absolute_url }}">Розпочати покупки</a></div>
                                 </div>
                             </div>
                         </div>
@@ -63,9 +63,9 @@
                         <div class="row">
                             <div class="col">
                                 <div class="home_slider_content"  data-animation-in="fadeIn" data-animation-out="animate-out fadeOut">
-                                    <div class="home_slider_title">A new Online Shop experience.</div>
-                                    <div class="home_slider_subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a ultricies metus. Sed nec molestie eros. Sed viverra velit venenatis fermentum luctus.</div>
-                                    <div class="button button_light home_button"><a href="#">Shop Now</a></div>
+                                    <div class="home_slider_title">Інтернет-магазин електроніки та аксесуарів.</div>
+                                    <div class="home_slider_subtitle">Купуйте найновішу техніку та аксеуари з доставкою по всій Україні.</div>
+                                    <div class="button button_light home_button"><a href="{{ categories.first.get_absolute_url }}">Розпочати покупки</a></div>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
         </div>
 
         <!-- Home Slider Dots -->
-        
+
         <div class="home_slider_dots_container">
             <div class="container">
                 <div class="row">
@@ -90,7 +90,7 @@
                         </div>
                     </div>
                 </div>
-            </div>	
+            </div>
         </div>
 
     </div>
@@ -106,13 +106,13 @@
                     <div>
                         <div class="avds_discount">
                             <div>20<span>%</span></div>
-                            <div>Discount</div>
+                            <div>Знижка</div>
                         </div>
                     </div>
                 </div>
                 <div class="avds_small_content">
                     <div class="avds_title">Смартфони</div>
-                    <div class="avds_link"><a href="categories.html">See More</a></div>
+                    <div class="avds_link"><a href="category/smartfoni/">See More</a></div>
                 </div>
             </div>
         </div>
@@ -120,9 +120,9 @@
             <div class="avds_background" style="background-image:url({% static 'images/avds_large.jpg'%})"></div>
             <div class="avds_large_container">
                 <div class="avds_large_content">
-                    <div class="avds_title">Потужні комп'ютери</div>
-                    <div class="avds_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a ultricies metus. Sed nec molestie eros. Sed viver ra velit venenatis fermentum luctus.</div>
-                    <div class="avds_link avds_link_large"><a href="categories.html">See More</a></div>
+                    <div class="avds_title">Професійні камери</div>
+                    <div class="avds_text">Робіть гарні знімки у будь-яких умовах!</div>
+                    <div class="avds_link avds_link_large"><a href="category/fotoaparati/">See More</a></div>
                 </div>
             </div>
         </div>
@@ -135,11 +135,11 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                
+
                 <div class="product_grid">
 
                     <!-- Product -->
-    
+
                     {% for product in products %}
                     <div class="product">
                         <div class="product_image"><img src="{{ product.photos.first.image.url }}" alt=""></div>
@@ -152,9 +152,9 @@
                         </div>
                     </div>
                     {% endfor %}
-                    
+
                 </div>
-                    
+
             </div>
         </div>
     </div>
@@ -169,9 +169,9 @@
                 <div class="avds_xl_container clearfix">
                     <div class="avds_xl_background" style="background-image:url({% static 'images/avds_xl.jpg'%})"></div>
                     <div class="avds_xl_content">
-                        <div class="avds_title">Багато інщих пристроїв</div>
-                        <div class="avds_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam a ultricies metus.</div>
-                        <div class="avds_link avds_xl_link"><a href="categories.html">See More</a></div>
+                        <div class="avds_title">Багато інших пристроїв</div>
+                        <div class="avds_text">Найрізноманітніший ассортимент товарів вже чекає на вас!</div>
+                        <div class="avds_link avds_xl_link"><a href="category/smartfoni/">See More</a></div>
                     </div>
                 </div>
             </div>
@@ -179,7 +179,7 @@
     </div>
 </div>
 
-{% include 'shop/inc/iconBoxes.html' %} 
+{% include 'shop/inc/iconBoxes.html' %}
 {% include '_inc/_newsletter.html' %}
 {% endblock content %}
 
